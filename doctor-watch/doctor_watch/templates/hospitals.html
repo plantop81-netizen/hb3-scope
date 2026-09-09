@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}병원 · doctor-watch{% endblock %}
+{% block body %}
+<div class="card">
+  <h1>병원 ({{ rows|length }})</h1>
+  <form method="get"><input type="text" name="q" value="{{ q }}" placeholder="병원명 / 시도 검색"></form>
+</div>
+<div class="card">
+<table><tr><th>병원</th><th>시도</th><th>종별</th><th>홈페이지</th><th>의료진 페이지</th><th>의사 수</th><th>최근 상태</th></tr>
+{% for r in rows %}
+<tr><td><a href="/hospitals/{{ r.id }}">{{ r.name }}</a></td><td>{{ r.sido or '' }}</td><td>{{ r.cl_name or '' }}</td>
+    <td>{% if r.url %}<a href="{{ r.url }}" target="_blank" rel="noopener">{{ r.url|replace('https://','')|replace('http://','')|truncate(36) }}</a>{% endif %}</td>
+    <td>{{ staff_urls(r)|length }}{% if r.staff_urls_manual %} <span class="muted">수동</span>{% endif %}</td>
+    <td>{{ r.doctor_count if r.doctor_count is not none else '' }}</td>
+    <td>{% if r.last_ok %}<span class="ok">정상</span>{% elif r.last_error %}<span class="err">{{ r.last_error|truncate(40) }}</span>{% else %}<span class="muted">미수집</span>{% endif %}</td></tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}

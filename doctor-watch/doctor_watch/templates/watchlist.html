@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}고객 명단 · doctor-watch{% endblock %}
+{% block body %}
+<div class="grid">
+<div class="card">
+  <h1>고객(관심) 의사 명단 ({{ rows|length }})</h1>
+  <form method="post" action="/watchlist/add" class="grid">
+    <input type="text" name="name" placeholder="이름 *" required>
+    <input type="text" name="hospital" placeholder="병원명 (선택, 부분일치)">
+    <input type="text" name="department" placeholder="진료과 (선택)">
+    <input type="text" name="memo" placeholder="메모 (담당자, 제품 등)">
+    <button>추가</button>
+  </form>
+  <form method="post" action="/watchlist/import" enctype="multipart/form-data" style="margin-top:10px">
+    <label class="muted">CSV 일괄 등록 (열: name, hospital, department, memo)</label>
+    <input type="file" name="file" accept=".csv"> <button class="sec">업로드</button>
+  </form>
+  <table style="margin-top:12px"><tr><th>이름</th><th>병원</th><th>진료과</th><th>메모</th><th></th></tr>
+  {% for w in rows %}<tr><td><a href="/doctors?q={{ w.name }}">{{ w.name }}</a></td><td>{{ w.hospital_name or '' }}</td><td>{{ w.department or '' }}</td><td>{{ w.memo or '' }}</td>
+    <td><form method="post" action="/watchlist/{{ w.id }}/delete" class="inline"><button class="sec">삭제</button></form></td></tr>{% endfor %}
+  </table>
+</div>
+<div class="card">
+  <h2>고객 명단 변동 이력 ({{ hits|length }})</h2>
+  <table><tr><th>주차</th><th>유형</th><th>이름</th><th>병원</th><th>비고</th></tr>
+  {% for c in hits %}<tr><td>{{ c.week_key }}</td><td><span class="tag {{ c.kind }}">{{ KIND_LABEL.get(c.kind, c.kind) }}</span></td><td>{{ c.name }}</td><td>{{ c.hospital_name }}</td><td>{% if c.related_hospital_name %}{{ '→' if c.kind == 'left' else '←' }} {{ c.related_hospital_name }}{% endif %}</td></tr>{% endfor %}
+  </table>
+</div>
+</div>
+{% endblock %}

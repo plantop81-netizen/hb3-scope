@@ -1,0 +1,94 @@
+name: doctor-watch weekly
+
+on:
+  schedule:
+    # 매주 월요일 06:30 KST (= 일요일 21:30 UTC). GitHub 스케줄은 수 분~수십 분 지연될 수 있어 여유를 둔다.
+    - cron: "30 21 * * 0"
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "수집 병원 수 제한 (테스트용, 비우면 전체)"
+        required: false
+        default: ""
+      no_llm:
+        description: "Claude 없이 규칙 기반 추출만 사용 (true/false)"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: doctor-watch
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: doctor-watch
+    env:
+      HIRA_SERVICE_KEY: ${{ secrets.HIRA_SERVICE_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      DOCTOR_WATCH_MODEL: ${{ vars.DOCTOR_WATCH_MODEL || 'claude-opus-5' }}
+      DOCTOR_WATCH_CONCURRENCY: ${{ vars.DOCTOR_WATCH_CONCURRENCY || '8' }}
+      DOCTOR_WATCH_RENDER: ${{ vars.DOCTOR_WATCH_RENDER || 'auto' }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      MAIL_FROM: ${{ secrets.MAIL_FROM }}
+      MAIL_TO: ${{ secrets.MAIL_TO }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: doctor-watch/requirements.txt
+
+      - name: Install
+        run: |
+          pip install -r requirements.txt -r requirements-render.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Sync hospital list from HIRA (skipped without key)
+        if: env.HIRA_SERVICE_KEY != ''
+        run: |
+          python -m doctor_watch init-hospitals --sido "${{ vars.DOCTOR_WATCH_SIDO || '' }}" --with-url-only
+          python -m doctor_watch hira-counts --sido "${{ vars.DOCTOR_WATCH_SIDO || '' }}" || true
+
+      - name: Seed hospitals from CSV (first run only)
+        run: |
+          if [ ! -f data/doctor_watch.db ]; then python -m doctor_watch import-hospitals data/hospitals.seed.csv; fi
+
+      - name: Collect, diff, report
+        run: |
+          ARGS="--report"
+          if [ -n "${{ github.event.inputs.limit }}" ]; then ARGS="$ARGS --limit ${{ github.event.inputs.limit }}"; fi
+          if [ "${{ github.event.inputs.no_llm }}" = "true" ] || [ -z "$ANTHROPIC_API_KEY" ]; then ARGS="$ARGS --no-llm"; fi
+          python -m doctor_watch run $ARGS
+
+      - name: Send briefing
+        run: python -m doctor_watch notify
+
+      - name: Commit data & reports
+        run: |
+          git config user.name "doctor-watch bot"
+          git config user.email "doctor-watch@users.noreply.github.com"
+          git add data/doctor_watch.db reports/
+          git commit -m "doctor-watch: weekly run $(date -u +%Y-%m-%d)" || echo "no changes"
+          git push
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: doctor-watch-report
+          path: doctor-watch/reports/
+          retention-days: 90

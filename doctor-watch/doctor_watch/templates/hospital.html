@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ h.name }} · doctor-watch{% endblock %}
+{% block body %}
+<div class="card">
+  <h1>{{ h.name }} <span class="muted">{{ h.sido or '' }} {{ h.cl_name or '' }} {% if not h.active %}· 비활성{% endif %}</span></h1>
+  <p>{% if h.url %}<a href="{{ h.url }}" target="_blank" rel="noopener">{{ h.url }}</a>{% endif %} <span class="muted">{{ h.addr or '' }} {{ h.tel or '' }}{% if h.dr_tot_cnt %} · 심평원 신고 의사 {{ h.dr_tot_cnt }}명{% endif %}</span></p>
+  <div class="grid">
+    <form method="post" action="/hospitals/{{ h.id }}/staff-urls">
+      <label class="muted">의료진 페이지 URL (줄바꿈 구분, 비우면 자동 탐색){% if h.staff_urls_manual %} · 현재 수동 지정{% endif %}</label>
+      <textarea name="urls" rows="4">{{ staff_urls|join('\n') }}</textarea>
+      <button>저장</button>
+      <form method="post" action="/hospitals/{{ h.id }}/toggle" class="inline"><button class="sec">{{ '비활성화' if h.active else '활성화' }}</button></form>
+    </form>
+    <div>
+      <h3>수집 이력</h3>
+      <table><tr><th>주차</th><th>결과</th><th>의사</th><th>페이지</th><th>LLM</th></tr>
+      {% for x in history %}<tr><td>{{ x.week_key }}</td><td>{% if x.ok %}<span class="ok">성공</span>{% else %}<span class="err">실패</span>{% endif %} <span class="muted">{{ x.error or '' }}</span></td><td>{{ x.doctor_count }}</td><td>{{ x.pages_ok }}/{{ x.pages_ok + x.pages_failed }}</td><td>{{ x.llm_calls }}</td></tr>{% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+<div class="grid">
+<div class="card">
+  <h2>현재 의료진 ({{ roster|length }})</h2>
+  <table><tr><th>이름</th><th>진료과</th><th>직위</th><th>분야</th></tr>
+  {% for d in roster %}<tr><td><a href="/doctors?q={{ d.name }}">{{ d.name }}</a></td><td>{{ d.department or '' }}</td><td>{{ d.position or '' }}</td><td class="muted">{{ (d.specialty or '')|truncate(40) }}</td></tr>{% endfor %}
+  </table>
+</div>
+<div class="card">
+  <h2>변동 이력 ({{ changes|length }})</h2>
+  <table><tr><th>주차</th><th>유형</th><th>이름</th><th>진료과</th><th>비고</th></tr>
+  {% for c in changes %}<tr><td>{{ c.week_key }}</td><td><span class="tag {{ c.kind }}">{{ KIND_LABEL.get(c.kind, c.kind) }}</span></td><td>{{ c.name }}</td><td>{{ c.department or '' }}</td>
+    <td>{% if c.related_hospital_name %}{{ '→' if c.kind == 'left' else '←' }} {{ c.related_hospital_name }}{% elif c.prev_department %}이전 {{ c.prev_department }}{% elif c.prev_position %}이전 {{ c.prev_position }}{% endif %}</td></tr>{% endfor %}
+  </table>
+  <h3>최근 수집 페이지</h3>
+  <table>{% for p in pages %}<tr><td><a href="{{ p.url }}" target="_blank" rel="noopener">{{ p.url|truncate(60) }}</a></td><td>{{ p.http_status }}</td><td class="muted">{{ p.extracted_by }} {{ p.error or '' }}</td></tr>{% endfor %}</table>
+</div>
+</div>
+{% endblock %}
