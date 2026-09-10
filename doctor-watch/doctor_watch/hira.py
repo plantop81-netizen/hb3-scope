@@ -53,6 +53,17 @@ class HiraError(RuntimeError):
     pass
 
 
+def _service_key(key: str) -> str:
+    """포털의 'Encoding' 키(%2B, %3D 포함)를 붙여넣어도 동작하도록 디코딩된 형태로 통일한다.
+    (httpx 가 params 를 다시 URL 인코딩하므로 Decoding 키를 넘겨야 한다.)"""
+    key = key.strip()
+    if "%" in key:
+        from urllib.parse import unquote
+
+        key = unquote(key)
+    return key
+
+
 def _items(payload: dict[str, Any]) -> tuple[list[dict[str, Any]], int]:
     resp = payload.get("response", {})
     header = resp.get("header", {})
@@ -77,7 +88,7 @@ def iter_hospitals(
     sleep: float = 0.2,
 ) -> Iterator[dict[str, Any]]:
     """지정 조건의 요양기관을 페이지 순회하며 내부 스키마 dict 로 변환해 yield."""
-    key = service_key or settings.hira_service_key
+    key = _service_key(service_key or settings.hira_service_key)
     if not key:
         raise HiraError("HIRA_SERVICE_KEY 가 설정되지 않았습니다 (.env 참고)")
     cl_list = cl_codes or [None]
@@ -135,7 +146,7 @@ def normalize_url(u: str | None) -> str | None:
 
 def specialist_counts(ykiho: str, service_key: str | None = None) -> dict[str, int]:
     """전문과목별 전문의 수 {과목명: 인원}."""
-    key = service_key or settings.hira_service_key
+    key = _service_key(service_key or settings.hira_service_key)
     if not key:
         raise HiraError("HIRA_SERVICE_KEY 가 설정되지 않았습니다")
     with httpx.Client(timeout=60) as client:

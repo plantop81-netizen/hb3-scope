@@ -32,6 +32,30 @@ def cmd_init_hospitals(a: argparse.Namespace) -> None:
     print(f"저장 {n}곳 (홈페이지 보유 {n_url}곳)")
 
 
+def cmd_hira_test(a: argparse.Namespace) -> None:
+    """서비스키가 동작하는지 1페이지만 호출해 확인."""
+    from .hira import BASIS_URL, CL_CODES, SIDO_CODES, HiraError, _items, _service_key
+
+    import httpx
+
+    key = _service_key(settings.hira_service_key)
+    if not key:
+        print("HIRA_SERVICE_KEY 가 비어 있습니다. .env 를 확인하세요.")
+        sys.exit(1)
+    params = {"serviceKey": key, "pageNo": 1, "numOfRows": 3, "_type": "json", "sidoCd": SIDO_CODES.get(a.sido, a.sido), "clCd": CL_CODES["종합병원"]}
+    r = httpx.get(BASIS_URL, params=params, timeout=60)
+    print("HTTP", r.status_code)
+    try:
+        rows, total = _items(r.json())
+    except (ValueError, HiraError) as e:
+        print("응답 해석 실패:", e)
+        print(r.text[:500])
+        sys.exit(1)
+    print(f"정상: {a.sido} 종합병원 {total}곳")
+    for row in rows:
+        print(" -", row.get("yadmNm"), "|", row.get("hospUrl") or "(홈페이지 없음)", "| 의사", row.get("drTotCnt"))
+
+
 def cmd_import_hospitals(a: argparse.Namespace) -> None:
     """CSV(name,url[,ykiho,sido,cl_name,addr,staff_urls]) 로 병원 추가. staff_urls 는 '|' 구분."""
     n = 0
@@ -191,6 +215,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--cl", help="종별 콤마 구분 (기본: 상급종합,종합병원,병원)")
     s.add_argument("--with-url-only", action="store_true", help="홈페이지가 있는 병원만 저장")
     s.set_defaults(fn=cmd_init_hospitals)
+
+    s = sub.add_parser("hira-test", help="심평원 서비스키 동작 확인 (1페이지 호출)")
+    s.add_argument("--sido", default="부산")
+    s.set_defaults(fn=cmd_hira_test)
 
     s = sub.add_parser("import-hospitals", help="CSV 로 병원 추가 (name,url,staff_urls ...)")
     s.add_argument("csv")
