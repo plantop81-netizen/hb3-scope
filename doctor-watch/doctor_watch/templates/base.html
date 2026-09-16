@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}doctor-watch{% endblock %}</title>
+<style>
+:root{--bg:#f5f7f8;--card:#fff;--ink:#0d1618;--muted:#6b7a7c;--line:#e1e7e8;--accent:#0d5c69;--good:#1a8f5a;--bad:#c0392b;--warn:#b7791f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+header .brand{font-weight:700;font-size:16px;color:var(--ink)}header nav a{margin-right:14px;color:var(--muted)}header nav a.on{color:var(--accent);font-weight:600}
+main{max-width:1100px;margin:20px auto;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+h1{font-size:20px;margin:0 0 12px}h2{font-size:16px;margin:0 0 10px}h3{font-size:14px;margin:14px 0 6px}
+.kpi{display:flex;gap:12px;flex-wrap:wrap}.kpi div{background:var(--bg);border-radius:8px;padding:10px 14px;min-width:120px}.kpi b{display:block;font-size:22px}
+table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}th{color:var(--muted);font-weight:600;font-size:12px}
+.tag{display:inline-block;border-radius:4px;padding:1px 7px;font-size:12px;color:#fff;margin-right:6px}
+.joined{background:var(--good)}.left{background:var(--bad)}.dept_changed{background:var(--warn)}.position_changed{background:#4b5563}.hira_count_changed{background:#2563eb}
+.muted{color:var(--muted);font-size:12px}.ok{color:var(--good)}.err{color:var(--bad)}
+input[type=text],textarea{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:6px;font:inherit}
+button,.btn{background:var(--accent);color:#fff;border:0;border-radius:6px;padding:7px 12px;font:inherit;cursor:pointer}button.sec{background:#e5eaeb;color:var(--ink)}
+form.inline{display:inline}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.star{color:#d97706}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/">🩺 doctor-watch</a>
+  <nav>
+    <a href="/" class="{{ 'on' if request.url.path == '/' else '' }}">브리핑</a>
+    <a href="/hospitals" class="{{ 'on' if request.url.path.startswith('/hospitals') else '' }}">병원</a>
+    <a href="/doctors" class="{{ 'on' if request.url.path.startswith('/doctors') else '' }}">의사 검색</a>
+    <a href="/watchlist" class="{{ 'on' if request.url.path.startswith('/watchlist') else '' }}">고객 명단</a>
+    <a href="/runs" class="{{ 'on' if request.url.path.startswith('/runs') else '' }}">실행 이력</a>
+  </nav>
+  <span class="muted" style="margin-left:auto">
+    {% if run_state.running %}⏳ 수집 실행 중…{% elif run_state.last_error %}<span class="err">마지막 실행 오류: {{ run_state.last_error }}</span>{% endif %}
+  </span>
+  <form method="post" action="/run" class="inline">
+    <label class="muted"><input type="checkbox" name="no_llm" value="1"> LLM 없이</label>
+    <button {% if run_state.running %}disabled{% endif %}>지금 수집</button>
+  </form>
+</header>
+<main>{% block body %}{% endblock %}</main>
+</body>
+</html>

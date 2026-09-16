@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}의사 검색 · doctor-watch{% endblock %}
+{% block body %}
+<div class="card"><h1>의사 검색</h1><form method="get"><input type="text" name="q" value="{{ q }}" placeholder="이름 (예: 김철수)" autofocus></form></div>
+{% if q %}
+<div class="card">
+  <h2>현재 소속 ({{ rows|length }})</h2>
+  <table><tr><th>이름</th><th>병원</th><th>진료과</th><th>직위</th><th>기준 주차</th></tr>
+  {% for r in rows %}<tr><td><b>{{ r.name }}</b></td><td><a href="/hospitals/{{ r.hid }}">{{ r.hospital_name }}</a></td><td>{{ r.department or '' }}</td><td>{{ r.position or '' }}</td><td>{{ r.week_key }}</td></tr>{% endfor %}
+  </table>
+</div>
+<div class="card">
+  <h2>변동 이력 ({{ changes|length }})</h2>
+  <table><tr><th>일자</th><th>유형</th><th>이름</th><th>병원</th><th>진료과</th><th>비고</th></tr>
+  {% for c in changes %}<tr><td>{{ c.detected_at[:10] }}</td><td><span class="tag {{ c.kind }}">{{ KIND_LABEL.get(c.kind, c.kind) }}</span></td><td>{{ c.name }}</td><td><a href="/hospitals/{{ c.hospital_id }}">{{ c.hospital_name }}</a></td><td>{{ c.department or '' }}</td><td>{% if c.related_hospital_name %}{{ '→' if c.kind == 'left' else '←' }} {{ c.related_hospital_name }}{% endif %}</td></tr>{% endfor %}
+  </table>
+</div>
+{% endif %}
+{% endblock %}

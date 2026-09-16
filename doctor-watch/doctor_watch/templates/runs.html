@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}실행 이력 · doctor-watch{% endblock %}
+{% block body %}
+<div class="card">
+  <h1>실행 이력</h1>
+  <table><tr><th>#</th><th>주차</th><th>시작</th><th>종료</th><th>상태</th><th>병원(성공/실패)</th><th>의사</th><th>변동</th><th>이직</th><th>LLM 호출</th></tr>
+  {% for r in rows %}<tr><td><a href="/?run_id={{ r.id }}">{{ r.id }}</a></td><td>{{ r.week_key }}</td><td>{{ r.started_at[:16] }}</td><td>{{ (r.finished_at or '')[:16] }}</td><td>{{ r.status }}</td>
+    <td>{{ r.stats.get('hospitals','') }} ({{ r.stats.get('ok','') }}/{{ r.stats.get('failed','') }})</td><td>{{ r.stats.get('doctors','') }}</td><td>{{ r.stats.get('changes','') }}</td><td>{{ r.stats.get('moves','') }}</td><td>{{ r.stats.get('llm_calls','') }}</td></tr>{% endfor %}
+  </table>
+</div>
+{% endblock %}

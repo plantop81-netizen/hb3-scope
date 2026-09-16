@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}브리핑 · doctor-watch{% endblock %}
+{% block body %}
+{% set run = b.run %}
+<div class="card">
+  <h1>주간 브리핑
+    {% if run %}<span class="muted">{{ (run.finished_at or run.started_at)[:16] }} · {{ run.week_key }} · run #{{ run.id }}</span>{% endif %}
+  </h1>
+  {% if not run %}
+    <p>완료된 수집이 없습니다. 병원을 등록한 뒤 상단의 <b>지금 수집</b> 을 누르거나 <code>python -m doctor_watch run</code> 을 실행하세요.</p>
+    <p class="muted">등록된 병원 {{ h_count }}곳 · 고객 명단 {{ wl_count }}명</p>
+  {% else %}
+  <div class="kpi">
+    <div><b>{{ b.stats.get('hospitals', 0) }}</b>수집 병원 <span class="muted">성공 {{ b.stats.get('ok', 0) }} / 실패 {{ b.stats.get('failed', 0) }}</span></div>
+    <div><b>{{ b.stats.get('doctors', 0) }}</b>확인된 의사</div>
+    <div><b>{{ b.stats.get('changes', 0) }}</b>변동</div>
+    <div><b>{{ b.stats.get('moves', 0) }}</b>이직 추정</div>
+    <div><b>{{ b.stats.get('watchlist_hits', 0) }}</b>고객 명단 해당</div>
+  </div>
+  <p class="muted">다른 실행 보기:
+    {% for r in runs %}{% if r.status == 'done' %}<a href="/?run_id={{ r.id }}">#{{ r.id }} {{ r.week_key }}</a>{% if not loop.last %} · {% endif %}{% endif %}{% endfor %}
+  </p>
+  {% endif %}
+</div>
+
+{% if b.watch_hits %}
+<div class="card">
+  <h2>⭐ 고객 명단 변동 ({{ b.watch_hits|length }})</h2>
+  <table><tr><th>유형</th><th>병원</th><th>이름</th><th>진료과</th><th>직위</th><th>이동 병원</th><th>메모</th></tr>
+  {% for c in b.watch_hits %}
+  <tr><td><span class="tag {{ c.kind }}">{{ KIND_LABEL.get(c.kind, c.kind) }}</span></td><td><a href="/hospitals/{{ c.hospital_id }}">{{ c.hospital_name }}</a></td>
+      <td><a href="/doctors?q={{ c.name }}"><b>{{ c.name }}</b></a></td><td>{{ c.department or '' }}</td><td>{{ c.position or '' }}</td><td>{{ c.related_hospital_name or '' }}</td><td>{{ c.watch_memo or '' }}</td></tr>
+  {% endfor %}
+  </table>
+</div>
+{% endif %}
+
+{% if b.moves %}
+<div class="card">
+  <h2>🔁 이직 추정 ({{ b.moves|length }})</h2>
+  <table><tr><th>이름</th><th>진료과</th><th>이전 병원</th><th>이동 병원</th></tr>
+  {% for c in b.moves %}
+  <tr><td><a href="/doctors?q={{ c.name }}"><b>{{ c.name }}</b></a></td><td>{{ c.department or '' }}</td><td><a href="/hospitals/{{ c.hospital_id }}">{{ c.hospital_name }}</a></td><td><a href="/hospitals/{{ c.related_hospital_id }}">{{ c.related_hospital_name }}</a></td></tr>
+  {% endfor %}
+  </table>
+</div>
+{% endif %}
+
+{% if run %}
+<div class="card">
+  <h2>병원별 변동</h2>
+  {% if not b.by_hospital %}<p class="muted">이번 주 변동 없음.</p>{% endif %}
+  {% for hname, chs in b.by_hospital.items() %}
+    <h3>{{ hname }} <span class="muted">{{ chs|length }}건</span></h3>
+    <table>
+    {% for c in chs %}
+      <tr><td style="width:120px"><span class="tag {{ c.kind }}">{{ KIND_LABEL.get(c.kind, c.kind) }}</span></td>
+          <td>{% if c.watchlist_id %}<span class="star">⭐</span> {% endif %}<a href="/doctors?q={{ c.name }}">{{ c.name }}</a></td>
+          <td>{{ c.department or '' }}{% if c.kind == 'dept_changed' %} <span class="muted">(이전: {{ c.prev_department or '-' }})</span>{% endif %}</td>
+          <td>{{ c.position or '' }}{% if c.kind == 'position_changed' %} <span class="muted">(이전: {{ c.prev_position or '-' }})</span>{% endif %}</td>
+          <td>{% if c.related_hospital_name %}{{ '→' if c.kind == 'left' else '←' }} <a href="/hospitals/{{ c.related_hospital_id }}">{{ c.related_hospital_name }}</a>{% endif %}</td></tr>
+    {% endfor %}
+    </table>
+  {% endfor %}
+</div>
+{% if b.failed %}
+<div class="card">
+  <h2>⚠️ 수집 실패 / 검토 필요 ({{ b.failed|length }})</h2>
+  <ul>{% for f in b.failed %}<li><a href="/hospitals/{{ f.hospital_id }}">{{ f.hospital_name }}</a> <span class="muted">{{ f.error or '' }}</span></li>{% endfor %}</ul>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}
