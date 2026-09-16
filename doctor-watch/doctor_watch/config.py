@@ -35,11 +35,13 @@ class Settings:
     anthropic_api_key: str = field(default_factory=lambda: os.environ.get("ANTHROPIC_API_KEY", ""))
     model: str = field(default_factory=lambda: os.environ.get("DOCTOR_WATCH_MODEL", "claude-opus-5"))
     concurrency: int = field(default_factory=lambda: _int("DOCTOR_WATCH_CONCURRENCY", 8))
-    max_pages_per_hospital: int = field(default_factory=lambda: _int("DOCTOR_WATCH_MAX_PAGES", 40))
+    max_pages_per_hospital: int = field(default_factory=lambda: _int("DOCTOR_WATCH_MAX_PAGES", 120))
     max_chars_per_page: int = field(default_factory=lambda: _int("DOCTOR_WATCH_MAX_CHARS", 120_000))
     request_timeout: float = 25.0
     per_host_delay: float = 0.6
     render_mode: str = field(default_factory=lambda: os.environ.get("DOCTOR_WATCH_RENDER", "auto"))
+    # robots.txt 존중 여부 (전역). 병원별로는 hospitals.ignore_robots 로 예외 지정.
+    respect_robots: bool = field(default_factory=lambda: os.environ.get("DOCTOR_WATCH_RESPECT_ROBOTS", "true").lower() not in ("0", "false", "no"))
     user_agent: str = field(
         default_factory=lambda: os.environ.get(
             "DOCTOR_WATCH_USER_AGENT",

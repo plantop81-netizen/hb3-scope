@@ -93,6 +93,12 @@ def cmd_set_staff_urls(a: argparse.Namespace) -> None:
     print("저장됨")
 
 
+def cmd_set_ignore_robots(a: argparse.Namespace) -> None:
+    with D.session() as conn:
+        conn.execute("UPDATE hospitals SET ignore_robots=? WHERE id=?", (0 if a.off else 1, a.hospital_id))
+    print("저장됨")
+
+
 def cmd_run(a: argparse.Namespace) -> None:
     from .pipeline import run_collection
 
@@ -239,6 +245,11 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("hospital_id", type=int)
     s.add_argument("urls", nargs="+")
     s.set_defaults(fn=cmd_set_staff_urls)
+
+    s = sub.add_parser("set-ignore-robots", help="병원별 robots.txt 무시 설정 (공개 의료진 페이지를 저빈도로 읽는 용도)")
+    s.add_argument("hospital_id", type=int)
+    s.add_argument("--off", action="store_true")
+    s.set_defaults(fn=cmd_set_ignore_robots)
 
     s = sub.add_parser("run", help="수집 실행 (탐색→수집→추출→비교)")
     s.add_argument("--limit", type=int)
