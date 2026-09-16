@@ -1,0 +1,121 @@
+{
+ "run": {
+  "id": 1,
+  "started_at": "2026-09-16T23:41:47+00:00",
+  "finished_at": "2026-09-16T23:45:55+00:00",
+  "status": "done",
+  "week_key": "2026-W38",
+  "stats": "{\"hospitals\": 11, \"ok\": 3, \"failed\": 8, \"doctors\": 94, \"llm_calls\": 82, \"changes\": 0, \"moves\": 0, \"watchlist_hits\": 0}"
+ },
+ "stats": {
+  "hospitals": 11,
+  "ok": 3,
+  "failed": 8,
+  "doctors": 94,
+  "llm_calls": 82,
+  "changes": 0,
+  "moves": 0,
+  "watchlist_hits": 0
+ },
+ "changes": [],
+ "moves": [],
+ "watch_hits": [],
+ "failed": [
+  {
+   "run_id": 1,
+   "hospital_id": 5,
+   "ok": 0,
+   "doctor_count": 0,
+   "pages_ok": 0,
+   "pages_failed": 0,
+   "llm_calls": 0,
+   "error": "의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)",
+   "hospital_name": "고신대학교복음병원",
+   "url": "https://www.kosinmed.or.kr"
+  },
+  {
+   "run_id": 1,
+   "hospital_id": 11,
+   "ok": 0,
+   "doctor_count": 0,
+   "pages_ok": 0,
+   "pages_failed": 0,
+   "llm_calls": 0,
+   "error": "홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known",
+   "hospital_name": "대동병원",
+   "url": "https://www.daedonghospital.co.kr"
+  },
+  {
+   "run_id": 1,
+   "hospital_id": 2,
+   "ok": 0,
+   "doctor_count": 0,
+   "pages_ok": 39,
+   "pages_failed": 0,
+   "llm_calls": 3,
+   "error": "의료진 페이지에서 의사를 찾지 못함",
+   "hospital_name": "동아대학교병원",
+   "url": "https://www.damc.or.kr"
+  },
+  {
+   "run_id": 1,
+   "hospital_id": 7,
+   "ok": 0,
+   "doctor_count": 0,
+   "pages_ok": 0,
+   "pages_failed": 0,
+   "llm_calls": 0,
+   "error": "홈페이지 접속 실패: ConnectTimeout: ",
+   "hospital_name": "동의의료원",
+   "url": "https://www.demc.or.kr"
+  },
+  {
+   "run_id": 1,
+   "hospital_id": 1,
+   "ok": 0,
+   "doctor_count": 0,
+   "pages_ok": 0,
+   "pages_failed": 0,
+   "llm_calls": 0,
+   "error": "홈페이지 접속 실패: robots.txt disallow",
+   "hospital_name": "부산대학교병원",
+   "url": "https://www.pnuh.or.kr"
+  },
+  {
+   "run_id": 1,
+   "hospital_id": 6,
+   "ok": 0,
+   "doctor_count": 0,
+   "pages_ok": 0,
+   "pages_failed": 0,
+   "llm_calls": 0,
+   "error": "의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)",
+   "hospital_name": "부산성모병원",
+   "url": "https://www.bsm.or.kr"
+  },
+  {
+   "run_id": 1,
+   "hospital_id": 8,
+   "ok": 0,
+   "doctor_count": 0,
+   "pages_ok": 0,
+   "pages_failed": 0,
+   "llm_calls": 0,
+   "error": "의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)",
+   "hospital_name": "부산의료원",
+   "url": "https://www.busanmc.or.kr"
+  },
+  {
+   "run_id": 1,
+   "hospital_id": 9,
+   "ok": 0,
+   "doctor_count": 0,
+   "pages_ok": 0,
+   "pages_failed": 0,
+   "llm_calls": 0,
+   "error": "홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known",
+   "hospital_name": "온종합병원",
+   "url": "https://www.onhospital.co.kr"
+  }
+ ]
+}
