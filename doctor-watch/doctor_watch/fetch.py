@@ -48,7 +48,7 @@ class Fetcher:
     def __init__(self, concurrency: int | None = None, timeout: float | None = None, respect_robots: bool = True):
         self.sem = asyncio.Semaphore(concurrency or settings.concurrency)
         self.timeout = timeout or settings.request_timeout
-        self.respect_robots = respect_robots
+        self.respect_robots = respect_robots and settings.respect_robots
         self._robots: dict[str, robotparser.RobotFileParser | None] = {}
         self._host_last: dict[str, float] = {}
         self._host_locks: dict[str, asyncio.Lock] = {}
@@ -102,10 +102,10 @@ class Fetcher:
                 await asyncio.sleep(wait)
             self._host_last[host] = time.monotonic()
 
-    async def get(self, url: str, render: str | None = None) -> Page:
+    async def get(self, url: str, render: str | None = None, ignore_robots: bool = False) -> Page:
         render = render or settings.render_mode
         async with self.sem:
-            if not await self._allowed(url):
+            if not ignore_robots and not await self._allowed(url):
                 return Page(url, url, 0, "", error="robots.txt disallow")
             await self._throttle(url)
             page = await self._get_http(url)

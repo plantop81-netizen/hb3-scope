@@ -21,7 +21,8 @@ MIN_STAFF_TEXT = 30  # 이보다 짧은 페이지는 의료진 페이지로 보�
 
 async def discover_staff_urls(fetcher: Fetcher, hospital: sqlite3.Row) -> tuple[list[str], str | None]:
     """홈페이지에서 의료진 페이지 후보 URL 을 찾는다. (urls, error)"""
-    home = await fetcher.get(hospital["url"])
+    ir = bool(hospital["ignore_robots"])
+    home = await fetcher.get(hospital["url"], ignore_robots=ir)
     if not home.ok:
         return [], home.error or f"HTTP {home.status}"
     cands = candidate_links(home.final_url, home.html)
@@ -30,7 +31,7 @@ async def discover_staff_urls(fetcher: Fetcher, hospital: sqlite3.Row) -> tuple[
         # 흔한 경로를 직접 시도
         base = home.final_url.rstrip("/")
         for path in ("/doctor", "/doctors", "/medical/doctor", "/kr/doctor", "/dr", "/staff", "/medical-staff"):
-            pg = await fetcher.get(base + path)
+            pg = await fetcher.get(base + path, ignore_robots=ir)
             if pg.ok and len(visible_text(pg.html)) > MIN_STAFF_TEXT:
                 urls.append(pg.final_url)
                 break
@@ -64,7 +65,7 @@ async def collect_hospital(fetcher: Fetcher, conn_factory, hospital: sqlite3.Row
         if url in visited:
             continue
         visited.add(url)
-        page = await fetcher.get(url)
+        page = await fetcher.get(url, ignore_robots=bool(hospital["ignore_robots"]))
         rec: dict[str, Any] = {"url": url, "status": page.status, "hash": None, "text_len": 0, "extracted_by": "none", "error": page.error}
         if not page.ok:
             pages_failed += 1

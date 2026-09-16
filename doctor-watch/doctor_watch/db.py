@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS hospitals (
     active       INTEGER NOT NULL DEFAULT 1,
     staff_urls   TEXT,                     -- JSON 배열: 의료진 페이지 URL (자동 탐색 또는 수동 지정)
     staff_urls_manual INTEGER NOT NULL DEFAULT 0,
+    ignore_robots INTEGER NOT NULL DEFAULT 0,   -- 1 이면 이 병원은 robots.txt 를 무시 (공개 의료진 페이지, 저빈도)
     last_status  TEXT,
     last_ok_at   TEXT,
     notes        TEXT,
@@ -148,7 +149,16 @@ def connect(path: Path | None = None) -> sqlite3.Connection:
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
     conn.executescript(SCHEMA)
+    _migrate(conn)
     return conn
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    """기존 DB 에 새 컬럼 추가."""
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(hospitals)")}
+    if "ignore_robots" not in cols:
+        conn.execute("ALTER TABLE hospitals ADD COLUMN ignore_robots INTEGER NOT NULL DEFAULT 0")
+        conn.commit()
 
 
 @contextmanager
@@ -179,7 +189,11 @@ def upsert_hospital(conn: sqlite3.Connection, h: dict[str, Any]) -> int:
             "SELECT id FROM hospitals WHERE name=? AND (sido IS NULL OR ? IS NULL OR sido=?) ORDER BY (url IS NULL) LIMIT 1",
             (h["name"], h.get("sido"), h.get("sido")),
         ).fetchone()
-    fields = ["ykiho", "name", "cl_cd", "cl_name", "sido", "sggu", "addr", "tel", "url", "dr_tot_cnt", "notes"]
+    fields = ["ykiho", "name", "cl_cd", "cl_name", "sido", "sggu", "addr", "tel", "url", "dr_tot_cnt", "notes", "ignore_robots"]
+    if h.get("ignore_robots") in ("", None):
+        h["ignore_robots"] = None
+    else:
+        h["ignore_robots"] = 1 if str(h["ignore_robots"]).strip().lower() in ("1", "true", "y", "yes") else 0
     if row:
         sets = ", ".join(f"{f}=COALESCE(?, {f})" for f in fields)
         conn.execute(
@@ -195,7 +209,7 @@ def upsert_hospital(conn: sqlite3.Connection, h: dict[str, Any]) -> int:
     cur = conn.execute(
         f"INSERT INTO hospitals ({', '.join(fields)}, staff_urls, staff_urls_manual, created_at, updated_at) "
         f"VALUES ({', '.join('?' for _ in fields)}, ?, ?, ?, ?)",
-        [h.get(f) for f in fields]
+        [(0 if f == "ignore_robots" and h.get(f) is None else h.get(f)) for f in fields]
         + [
             json.dumps(h["staff_urls"], ensure_ascii=False) if h.get("staff_urls") else None,
             1 if h.get("staff_urls") else 0,

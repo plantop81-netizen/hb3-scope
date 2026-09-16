@@ -129,7 +129,7 @@ def select_option_links(page_url: str, html: str) -> list[str]:
             val = (opt.get("value") or "").strip()
             if not val or val in ("0", "all", "전체", ""):
                 continue
-            if val.startswith(("http", "/")):
+            if val.startswith(("http", "/")) or re.search(r"\.(php|do|html?|jsp|asp|aspx)(\?|$)|/", val):
                 out.append(_norm(urljoin(page_url, val)))
             else:
                 parts = urlsplit(page_url)
