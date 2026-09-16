@@ -18,17 +18,24 @@ def cmd_init_hospitals(a: argparse.Namespace) -> None:
     """심평원 API 로 병원 목록(홈페이지 포함)을 가져와 저장."""
     from .hira import iter_hospitals
 
-    cl = [c.strip() for c in a.cl.split(",")] if a.cl else ["상급종합", "종합병원", "병원"]
-    sidos = [s.strip() for s in a.sido.split(",")] if a.sido else [None]
+    from .hira import HiraError
+
+    cl = [c.strip() for c in a.cl.split(",") if c.strip()] if a.cl else ["상급종합", "종합병원", "병원"]
+    sidos = [s.strip() for s in a.sido.split(",") if s.strip()] or [None]
     n = n_url = 0
-    with D.session() as conn:
-        for sido in sidos:
-            for h in iter_hospitals(sido=sido, cl_codes=cl):
-                if a.with_url_only and not h.get("url"):
-                    continue
-                D.upsert_hospital(conn, h)
-                n += 1
-                n_url += 1 if h.get("url") else 0
+    try:
+        with D.session() as conn:
+            for sido in sidos:
+                for h in iter_hospitals(sido=sido, cl_codes=cl):
+                    if a.with_url_only and not h.get("url"):
+                        continue
+                    D.upsert_hospital(conn, h)
+                    n += 1
+                    n_url += 1 if h.get("url") else 0
+    except HiraError as e:
+        print(f"심평원 연동 실패: {e}", file=sys.stderr)
+        print(f"(실패 전까지 저장 {n}곳)")
+        sys.exit(2)
     print(f"저장 {n}곳 (홈페이지 보유 {n_url}곳)")
 
 
@@ -200,8 +207,8 @@ def cmd_serve(a: argparse.Namespace) -> None:
 def cmd_hira_counts(a: argparse.Namespace) -> None:
     from .pipeline import refresh_hira_counts
 
-    cl = [c.strip() for c in a.cl.split(",")] if a.cl else ["상급종합", "종합병원", "병원"]
-    n = refresh_hira_counts(sido=a.sido, cl=cl)
+    cl = [c.strip() for c in a.cl.split(",") if c.strip()] if a.cl else ["상급종합", "종합병원", "병원"]
+    n = refresh_hira_counts(sido=a.sido or None, cl=cl)
     print(f"심평원 의사 수 변동 {n}건 기록")
 
 

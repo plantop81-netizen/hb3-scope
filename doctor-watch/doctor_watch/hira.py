@@ -80,13 +80,29 @@ def _items(payload: dict[str, Any]) -> tuple[list[dict[str, Any]], int]:
     return rows, int(body.get("totalCount") or 0)
 
 
+# 공공데이터포털은 해외 IP(예: GitHub Actions 미국 러너) 접속을 막는 경우가 있어 연결 시간을 짧게 잡고 몇 번만 재시도한다.
+TIMEOUT = httpx.Timeout(60.0, connect=15.0)
+RETRIES = 3
+
+
 def _fetch_page(client: httpx.Client, params: dict[str, Any]) -> tuple[list[dict[str, Any]], int]:
-    r = client.get(BASIS_URL, params=params)
-    r.raise_for_status()
-    try:
-        return _items(r.json())
-    except ValueError as e:  # XML 오류응답 등
-        raise HiraError(f"JSON 파싱 실패: {r.text[:300]}") from e
+    last: Exception | None = None
+    for attempt in range(RETRIES):
+        try:
+            r = client.get(BASIS_URL, params=params)
+            r.raise_for_status()
+            try:
+                return _items(r.json())
+            except ValueError as e:  # XML 오류응답 등
+                raise HiraError(f"JSON 파싱 실패: {r.text[:300]}") from e
+        except httpx.TransportError as e:  # 연결/읽기 시간초과, 프록시 거부 등
+            last = e
+            log.warning("HIRA 접속 실패 (%d/%d): %s", attempt + 1, RETRIES, e)
+            time.sleep(2 * (attempt + 1))
+    raise HiraError(
+        "apis.data.go.kr 에 접속할 수 없습니다. 공공데이터포털은 해외 IP 를 차단하는 경우가 있으니 "
+        "국내 PC 에서 `init-hospitals` 를 실행해 목록을 만들거나 CSV 로 등록하세요."
+    ) from last
 
 
 def iter_hospitals(
@@ -109,7 +125,7 @@ def iter_hospitals(
     want_sido = SIDO_CODES.get(sido, sido) if sido else None
     base: dict[str, Any] = {"serviceKey": key, "numOfRows": page_size, "_type": "json"}
 
-    with httpx.Client(timeout=60) as client:
+    with httpx.Client(timeout=TIMEOUT) as client:
         # 1차: 지역 필터. 2차: 조건 없음.
         attempts: list[dict[str, Any]] = []
         if want_sido:
@@ -168,7 +184,7 @@ def specialist_counts(ykiho: str, service_key: str | None = None) -> dict[str, i
     key = _service_key(service_key or settings.hira_service_key)
     if not key:
         raise HiraError("HIRA_SERVICE_KEY 가 설정되지 않았습니다")
-    with httpx.Client(timeout=60) as client:
+    with httpx.Client(timeout=TIMEOUT) as client:
         r = client.get(SPECIALIST_URL, params={"serviceKey": key, "ykiho": ykiho, "numOfRows": 100, "_type": "json"})
         r.raise_for_status()
         rows, _ = _items(r.json())

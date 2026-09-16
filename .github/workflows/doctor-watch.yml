@@ -58,15 +58,17 @@ jobs:
           pip install -r requirements.txt -r requirements-render.txt
           python -m playwright install --with-deps chromium
 
-      - name: Sync hospital list from HIRA (skipped without key)
+      # 공공데이터포털은 해외 IP(GitHub 러너)를 차단하는 경우가 있어 실패해도 계속 진행한다.
+      # 그 경우 병원 목록은 data/hospitals.seed.csv(국내 PC 에서 init-hospitals 로 만든 DB 포함)로 유지된다.
+      - name: Sync hospital list from HIRA (best effort)
         if: env.HIRA_SERVICE_KEY != ''
+        continue-on-error: true
         run: |
           python -m doctor_watch init-hospitals --sido "${{ vars.DOCTOR_WATCH_SIDO || '' }}" --with-url-only
           python -m doctor_watch hira-counts --sido "${{ vars.DOCTOR_WATCH_SIDO || '' }}" || true
 
-      - name: Seed hospitals from CSV (first run only)
-        run: |
-          if [ ! -f data/doctor_watch.db ]; then python -m doctor_watch import-hospitals data/hospitals.seed.csv; fi
+      - name: Merge curated hospital CSV
+        run: python -m doctor_watch import-hospitals data/hospitals.seed.csv
 
       - name: Collect, diff, report
         run: |
