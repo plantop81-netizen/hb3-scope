@@ -80,6 +80,15 @@ def _items(payload: dict[str, Any]) -> tuple[list[dict[str, Any]], int]:
     return rows, int(body.get("totalCount") or 0)
 
 
+def _fetch_page(client: httpx.Client, params: dict[str, Any]) -> tuple[list[dict[str, Any]], int]:
+    r = client.get(BASIS_URL, params=params)
+    r.raise_for_status()
+    try:
+        return _items(r.json())
+    except ValueError as e:  # XML 오류응답 등
+        raise HiraError(f"JSON 파싱 실패: {r.text[:300]}") from e
+
+
 def iter_hospitals(
     sido: str | None = None,
     cl_codes: list[str] | None = None,
@@ -87,38 +96,48 @@ def iter_hospitals(
     service_key: str | None = None,
     sleep: float = 0.2,
 ) -> Iterator[dict[str, Any]]:
-    """지정 조건의 요양기관을 페이지 순회하며 내부 스키마 dict 로 변환해 yield."""
+    """지정 조건의 요양기관을 페이지 순회하며 내부 스키마 dict 로 변환해 yield.
+
+    포털 API 가 지역+종별 조건을 함께 주면 0건을 돌려주는 경우가 있어(2026-09 확인),
+    서버 필터는 지역까지만 걸고 종별은 응답을 받아 코드에서 거른다. 지역 필터마저 0건이면
+    조건 없이 전체를 받아 코드에서 거른다.
+    """
     key = _service_key(service_key or settings.hira_service_key)
     if not key:
         raise HiraError("HIRA_SERVICE_KEY 가 설정되지 않았습니다 (.env 참고)")
-    cl_list = cl_codes or [None]
+    want_cl = {CL_CODES.get(c, c) for c in cl_codes} if cl_codes else None
+    want_sido = SIDO_CODES.get(sido, sido) if sido else None
+    base: dict[str, Any] = {"serviceKey": key, "numOfRows": page_size, "_type": "json"}
+
     with httpx.Client(timeout=60) as client:
-        for cl in cl_list:
+        # 1차: 지역 필터. 2차: 조건 없음.
+        attempts: list[dict[str, Any]] = []
+        if want_sido:
+            attempts.append({"sidoCd": want_sido})
+        attempts.append({})
+        for extra in attempts:
+            rows, total = _fetch_page(client, {**base, **extra, "pageNo": 1})
+            if total == 0 and extra:
+                log.warning("HIRA: 조건 %s 로 0건 → 조건 완화", extra)
+                continue
+            log.info("HIRA: 조건 %s 총 %d건", extra or "없음", total)
             page = 1
             while True:
-                params: dict[str, Any] = {
-                    "serviceKey": key,
-                    "pageNo": page,
-                    "numOfRows": page_size,
-                    "_type": "json",
-                }
-                if sido:
-                    params["sidoCd"] = SIDO_CODES.get(sido, sido)
-                if cl:
-                    params["clCd"] = CL_CODES.get(cl, cl)
-                r = client.get(BASIS_URL, params=params)
-                r.raise_for_status()
-                try:
-                    rows, total = _items(r.json())
-                except ValueError as e:  # XML 오류응답 등
-                    raise HiraError(f"JSON 파싱 실패: {r.text[:300]}") from e
+                if page > 1:
+                    time.sleep(sleep)
+                    rows, _ = _fetch_page(client, {**base, **extra, "pageNo": page})
                 for row in rows:
-                    yield normalize_row(row)
-                log.info("HIRA basis page %s (%s/%s) sido=%s cl=%s", page, page * page_size, total, sido, cl)
+                    h = normalize_row(row)
+                    if want_sido and str(row.get("sidoCd") or "") != str(want_sido):
+                        continue
+                    if want_cl and str(h.get("cl_cd") or "") not in want_cl:
+                        continue
+                    yield h
+                log.info("HIRA basis page %s (%s/%s)", page, min(page * page_size, total), total)
                 if page * page_size >= total or not rows:
                     break
                 page += 1
-                time.sleep(sleep)
+            return
 
 
 def normalize_row(row: dict[str, Any]) -> dict[str, Any]:

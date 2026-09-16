@@ -168,10 +168,16 @@ def upsert_hospital(conn: sqlite3.Connection, h: dict[str, Any]) -> int:
     row = None
     if h.get("ykiho"):
         row = conn.execute("SELECT id FROM hospitals WHERE ykiho=?", (h["ykiho"],)).fetchone()
-    if row is None:
+        if row is None:
+            # CSV 로 먼저 등록된(요양기호 없는) 같은 이름의 병원과 병합
+            row = conn.execute(
+                "SELECT id FROM hospitals WHERE ykiho IS NULL AND name=? AND (sido IS NULL OR ? IS NULL OR sido=?)",
+                (h["name"], h.get("sido"), h.get("sido")),
+            ).fetchone()
+    else:
         row = conn.execute(
-            "SELECT id FROM hospitals WHERE name=? AND IFNULL(url,'')=IFNULL(?, '')",
-            (h["name"], h.get("url")),
+            "SELECT id FROM hospitals WHERE name=? AND (sido IS NULL OR ? IS NULL OR sido=?) ORDER BY (url IS NULL) LIMIT 1",
+            (h["name"], h.get("sido"), h.get("sido")),
         ).fetchone()
     fields = ["ykiho", "name", "cl_cd", "cl_name", "sido", "sggu", "addr", "tel", "url", "dr_tot_cnt", "notes"]
     if row:
