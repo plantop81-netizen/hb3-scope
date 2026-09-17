@@ -246,9 +246,16 @@ def apply_snapshot(
                 upsert(key, dept_pending=dept, position=pos, source_url=rep.get("source_url"), miss_count=0, last_seen_run=run_id, updated_run=run_id)
             continue
         if st["position"] and pos and st["position"] != pos and len({r.get("position") for r in rows if r.get("position")}) == 1:
-            changes.append({"kind": "position_changed", "name": rep["name"], "name_key": key, "department": dept, "position": pos,
-                            "prev_department": st["department"], "prev_position": st["position"]})
-        upsert(key, name=rep["name"], department=dept, position=pos, dept_pending=None, source_url=rep.get("source_url"), miss_count=0, last_seen_run=run_id, updated_run=run_id)
+            if st.get("pos_pending") == pos:
+                changes.append({"kind": "position_changed", "name": rep["name"], "name_key": key, "department": dept, "position": pos,
+                                "prev_department": st["department"], "prev_position": st["position"]})
+                upsert(key, name=rep["name"], department=dept, position=pos, dept_pending=None, pos_pending=None,
+                       source_url=rep.get("source_url"), miss_count=0, last_seen_run=run_id, updated_run=run_id)
+            else:
+                upsert(key, name=rep["name"], department=dept, pos_pending=pos, dept_pending=None,
+                       source_url=rep.get("source_url"), miss_count=0, last_seen_run=run_id, updated_run=run_id)
+            continue
+        upsert(key, name=rep["name"], department=dept, position=pos, dept_pending=None, pos_pending=None, source_url=rep.get("source_url"), miss_count=0, last_seen_run=run_id, updated_run=run_id)
 
     # 이번에 안 보인 사람들
     for key, st in states.items():
