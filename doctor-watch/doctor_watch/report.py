@@ -123,6 +123,8 @@ def markdown_report(b: dict[str, Any]) -> str:
     out.append(f"- 수집 병원: {s.get('hospitals', 0)}곳 (성공 {s.get('ok', 0)}, 실패 {s.get('failed', 0)})")
     out.append(f"- 확인된 의사: {s.get('doctors', 0)}명")
     out.append(f"- 변동: {s.get('changes', 0)}건 · 이직 추정 {s.get('moves', 0)}건 · 고객 명단 해당 {s.get('watchlist_hits', 0)}건")
+    if s.get("llm_budget_exceeded"):
+        out.append(f"- ⚠️ Claude 호출 상한({s['llm_budget_exceeded']}회) 초과: 일부 페이지는 규칙 기반으로 추출되어 정확도가 낮을 수 있음")
     out.append("")
     if b["watch_hits"]:
         out += ["## ⭐ 고객 명단 변동", "", "| 유형 | 병원 | 이름 | 진료과 | 직위 | 이동 병원 | 메모 |", "|---|---|---|---|---|---|---|"]

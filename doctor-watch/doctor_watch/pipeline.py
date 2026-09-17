@@ -38,7 +38,23 @@ async def discover_staff_urls(fetcher: Fetcher, hospital: sqlite3.Row) -> tuple[
     return urls, None
 
 
-async def collect_hospital(fetcher: Fetcher, conn_factory, hospital: sqlite3.Row, run_id: int, prefer_llm: bool = True) -> dict[str, Any]:
+class LlmBudget:
+    """실행 1회당 Claude 호출 예산. 0 이면 무제한."""
+
+    def __init__(self, limit: int):
+        self.limit, self.used, self.exceeded = limit, 0, False
+
+    def allow(self) -> bool:
+        if self.limit and self.used >= self.limit:
+            return False
+        self.used += 1
+        return True
+
+
+async def collect_hospital(
+    fetcher: Fetcher, conn_factory, hospital: sqlite3.Row, run_id: int, prefer_llm: bool = True, budget: LlmBudget | None = None
+) -> dict[str, Any]:
+    budget = budget or LlmBudget(0)
     """병원 한 곳 수집. 결과 dict 를 반환하고 DB 기록은 호출 측(단일 스레드)에서 수행한다."""
     hid = hospital["id"]
     result: dict[str, Any] = {"hospital_id": hid, "ok": False, "doctors": [], "pages": [], "llm_calls": 0, "error": None, "staff_urls": None}
@@ -85,10 +101,14 @@ async def collect_hospital(fetcher: Fetcher, conn_factory, hospital: sqlite3.Row
             found, method = cached
             rec["extracted_by"] = "cache"
         else:
-            found, method = await asyncio.to_thread(extract, text, hospital["name"], url, prefer_llm)
+            use_llm = prefer_llm and budget.allow()
+            found, method = await asyncio.to_thread(extract, text, hospital["name"], url, use_llm)
             rec["extracted_by"] = method
             if method == "llm":
                 result["llm_calls"] += 1
+            elif prefer_llm and not use_llm:
+                rec["extracted_by"] = "heuristic(budget)"
+                budget.exceeded = True
             with conn_factory() as c:
                 D.cache_put(c, h, found, method, settings.model if method == "llm" else None)
         pages_ok += 1
@@ -164,6 +184,7 @@ async def run_collection(
     log.info("run %s: %d hospitals", run_id, len(hospitals))
 
     fetcher = Fetcher(concurrency=concurrency)
+    budget = LlmBudget(settings.max_llm_calls_per_run)
     stats = {"hospitals": len(hospitals), "ok": 0, "failed": 0, "doctors": 0, "llm_calls": 0, "changes": 0, "moves": 0, "watchlist_hits": 0}
     conn_factory = lambda: D.session()  # noqa: E731
     try:
@@ -172,7 +193,7 @@ async def run_collection(
         async def one(h):
             async with sem:
                 try:
-                    return await collect_hospital(fetcher, conn_factory, h, run_id, prefer_llm)
+                    return await collect_hospital(fetcher, conn_factory, h, run_id, prefer_llm, budget)
                 except Exception as e:  # noqa: BLE001
                     log.exception("hospital %s failed", h["name"])
                     return {"hospital_id": h["id"], "ok": False, "doctors": [], "pages": [], "llm_calls": 0, "error": f"{type(e).__name__}: {e}"}
@@ -190,6 +211,9 @@ async def run_collection(
                 progress(done, len(hospitals), res)
     finally:
         await fetcher.close()
+    if budget.exceeded:
+        stats["llm_budget_exceeded"] = budget.limit
+        log.warning("Claude 호출 예산(%d) 초과: 일부 페이지는 규칙 기반으로 추출됨", budget.limit)
 
     # ── 비교 (상태표 기반: 2회 연속 확인 시 합류, 2회 연속 부재 시 제외) ──
     for h in hospitals:
