@@ -263,7 +263,28 @@ def write_reports(conn: sqlite3.Connection, run_id: int | None = None, out_dir: 
     files["latest_html"].write_text(ht.replace("<h1>", _nav("index.html") + "<h1>", 1), encoding="utf-8")
     write_site(conn, out_dir)
     files["json"].write_text(json.dumps({k: v for k, v in b.items() if k != "by_hospital"}, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+    files["failed_csv"] = out_dir / "failed-hospitals.csv"
+    write_failed_csv(conn, files["failed_csv"], (b["run"] or {}).get("id"))
     return files
+
+
+def write_failed_csv(conn: sqlite3.Connection, path: Path, run_id: int | None) -> int:
+    """수집 실패 병원 목록 CSV (이름, 시도, 종별, 홈페이지, 원인, 의료진 페이지 칸). 사용자가 채워서 seed CSV 로 쓸 수 있게 한다."""
+    import csv
+
+    if run_id is None:
+        return 0
+    rows = conn.execute(
+        "SELECT h.name, h.sido, h.cl_name, h.url, hr.error FROM hospital_runs hr JOIN hospitals h ON h.id=hr.hospital_id "
+        "WHERE hr.run_id=? AND hr.ok=0 ORDER BY h.sido, h.cl_name, h.name",
+        (run_id,),
+    ).fetchall()
+    with open(path, "w", newline="", encoding="utf-8-sig") as f:
+        w = csv.writer(f)
+        w.writerow(["name", "sido", "cl_name", "url", "reason", "staff_urls", "ignore_robots"])
+        for r in rows:
+            w.writerow([r["name"], r["sido"] or "", r["cl_name"] or "", r["url"] or "", (r["error"] or "")[:80], "", ""])
+    return len(rows)
 
 
 # ── 정적 대시보드 (GitHub Pages 등 정적 호스팅용) ─────────────────────────

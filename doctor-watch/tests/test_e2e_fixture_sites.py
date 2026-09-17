@@ -123,6 +123,8 @@ def test_third_week_confirms_changes_and_links_move(env, server):
         page = (site / f"hospital-{hid}.html").read_text(encoding="utf-8")
         assert "이영희" in page and "← 하나종합병원" in page
         assert "이영희" in (site / "search.html").read_text(encoding="utf-8")
+        failed_csv = (site / "failed-hospitals.csv").read_text(encoding="utf-8-sig")
+        assert "해운병원" in failed_csv and "staff_urls" in failed_csv
 
 
 def test_web_app_renders(env):

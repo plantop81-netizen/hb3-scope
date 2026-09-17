@@ -96,3 +96,16 @@ def norm_department(raw: str | None) -> str | None:
     s = re.sub(r"\s+", "", s)
     s = re.sub(r"(진료과|센터|클리닉|교실)$", "", s) if len(s) > 3 else s
     return DEPT_ALIASES.get(s, s) or None
+
+
+_ORG_PREFIX = re.compile(r"(의료법인|학교법인|재단법인|사회복지법인|사단법인|국립대학법인|\(재\)|\(의\)|\(학\))")
+_ORG_MID = re.compile(r"[가-힣A-Za-z]+(의료재단|교육재단|복지재단|재단|의료원|유지재단|학원)")
+
+
+def hospital_key(name: str) -> str:
+    """'의료법인 인당의료재단 부민병원' → '부민병원', '부산성모병원(재단법인 …)' → '부산성모병원'."""
+    s = unicodedata.normalize("NFKC", name or "")
+    s = re.sub(r"\(.*?\)", "", s)
+    s = _ORG_PREFIX.sub("", s)
+    s = _ORG_MID.sub("", s) if re.search(r"(병원|의원)", s) else s
+    return re.sub(r"[\s·\-_]+", "", s).strip()

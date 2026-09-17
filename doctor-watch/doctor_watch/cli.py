@@ -100,6 +100,26 @@ def cmd_set_staff_urls(a: argparse.Namespace) -> None:
     print("저장됨")
 
 
+def cmd_rebaseline(a: argparse.Namespace) -> None:
+    """의사 상태표를 최신 성공 스냅샷으로 다시 잡는다 (추출 방식 변경 등으로 기준선이 오염됐을 때)."""
+    from .diff import apply_snapshot
+
+    with D.session() as conn:
+        if a.hospital_id:
+            ids = [a.hospital_id]
+        else:
+            ids = [r["id"] for r in D.list_hospitals(conn, active_only=True)]
+        n = 0
+        for hid in ids:
+            last = conn.execute("SELECT MAX(run_id) AS r FROM hospital_runs WHERE hospital_id=? AND ok=1", (hid,)).fetchone()["r"]
+            if last is None:
+                continue
+            conn.execute("DELETE FROM doctor_state WHERE hospital_id=?", (hid,))
+            apply_snapshot(conn, last, hid, D.load_roster(conn, last, hid), set(), baseline=True)
+            n += 1
+    print(f"{n}곳 기준선 재설정")
+
+
 def cmd_deactivate(a: argparse.Namespace) -> None:
     """시도 또는 병원 id 로 수집 대상에서 제외/복귀."""
     with D.session() as conn:
@@ -262,6 +282,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("hospital_id", type=int)
     s.add_argument("urls", nargs="+")
     s.set_defaults(fn=cmd_set_staff_urls)
+
+    s = sub.add_parser("rebaseline", help="의사 상태표를 최신 성공 명단으로 재설정 (변동 기록 없음)")
+    s.add_argument("--hospital-id", type=int)
+    s.set_defaults(fn=cmd_rebaseline)
 
     s = sub.add_parser("deactivate", help="시도/병원을 수집 대상에서 제외 (--undo 로 복귀)")
     s.add_argument("--sido")

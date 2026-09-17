@@ -86,3 +86,11 @@ def test_apply_snapshot_hysteresis(tmp_path):
         ch = apply_snapshot(conn, r[4], hid, rows("최민수", url="http://a/other"), {"http://a/other"})
         assert [(c["kind"], c["name"]) for c in ch] == [("joined", "최민수")]
         assert conn.execute("SELECT status, miss_count FROM doctor_state WHERE name='김철수'").fetchone()["miss_count"] == 0
+
+
+def test_hospital_key_merges_org_prefixes():
+    from doctor_watch.names import hospital_key
+
+    assert hospital_key("의료법인 인당의료재단 부민병원") == "부민병원"
+    assert hospital_key("부산성모병원(재단법인 천주교부산교구유지재단)") == "부산성모병원"
+    assert hospital_key("인제대학교 부산백병원") == hospital_key("인제대학교부산백병원")
