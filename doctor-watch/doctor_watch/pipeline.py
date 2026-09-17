@@ -10,7 +10,7 @@ from typing import Any
 from . import db as D
 from .config import settings
 from .diff import apply_snapshot, link_moves, mark_watchlist_hits, record_changes
-from .discover import candidate_links, department_links, select_option_links
+from .discover import candidate_links, department_links, llm_pick_staff_links, select_option_links
 from .extract import extract
 from .fetch import Fetcher, content_hash, visible_text
 
@@ -27,6 +27,11 @@ async def discover_staff_urls(fetcher: Fetcher, hospital: sqlite3.Row) -> tuple[
         return [], home.error or f"HTTP {home.status}"
     cands = candidate_links(home.final_url, home.html)
     urls = [u for _, u, _ in cands[:6]]
+    if not urls and settings.llm_enabled:
+        try:
+            urls = await asyncio.to_thread(llm_pick_staff_links, hospital["name"], home.final_url, home.html)
+        except Exception as e:  # noqa: BLE001
+            log.warning("LLM 링크 선택 실패(%s): %s", hospital["name"], e)
     if not urls:
         # 흔한 경로를 직접 시도
         base = home.final_url.rstrip("/")
@@ -97,20 +102,26 @@ async def collect_hospital(
         # 캐시: 동일 내용이면 재추출 생략
         with conn_factory() as c:
             cached = D.cache_get(c, h)
-        if cached:
+        # 규칙 기반으로 임시 추출된 캐시는 예산이 허락하면 Claude 로 다시 추출해 품질을 올린다
+        if cached and (cached[1] == "llm" or not (prefer_llm and settings.llm_enabled)):
             found, method = cached
             rec["extracted_by"] = "cache"
         else:
             use_llm = prefer_llm and budget.allow()
-            found, method = await asyncio.to_thread(extract, text, hospital["name"], url, use_llm)
-            rec["extracted_by"] = method
-            if method == "llm":
-                result["llm_calls"] += 1
-            elif prefer_llm and not use_llm:
-                rec["extracted_by"] = "heuristic(budget)"
-                budget.exceeded = True
-            with conn_factory() as c:
-                D.cache_put(c, h, found, method, settings.model if method == "llm" else None)
+            if cached and not use_llm:
+                found, method = cached
+                rec["extracted_by"] = "cache"
+            else:
+                found, method = await asyncio.to_thread(extract, text, hospital["name"], url, use_llm)
+                rec["extracted_by"] = method
+                if method == "llm":
+                    result["llm_calls"] += 1
+                elif prefer_llm and not use_llm:
+                    rec["extracted_by"] = "heuristic(budget)"
+                    budget.exceeded = True
+            if rec["extracted_by"] != "cache":
+                with conn_factory() as c:
+                    D.cache_put(c, h, found, method, settings.model if method == "llm" else None)
         pages_ok += 1
         for d in found:
             key = (d["name_key"], d.get("department") or "")
@@ -249,6 +260,9 @@ async def run_collection(
     stats["moves"] = link_moves(conn, run_id)
     stats["watchlist_hits"] = mark_watchlist_hits(conn, run_id)
     D.finish_run(conn, run_id, "done", stats)
+    # 페이지 로그는 최근 12회 실행분만 보관 (DB 비대화 방지; 명단/변동/캐시는 유지)
+    conn.execute("DELETE FROM pages WHERE run_id < ?", (run_id - 12,))
+    conn.commit()
     conn.close()
     log.info("run %s done: %s", run_id, json.dumps(stats, ensure_ascii=False))
     return run_id
@@ -263,7 +277,8 @@ def refresh_hira_counts(run_id: int | None = None, sido: str | None = None, cl: 
         r = D.latest_run(conn)
         run_id = r["id"] if r else D.start_run(conn)
     n = 0
-    for h in iter_hospitals(sido=sido, cl_codes=cl):
+    sidos = [x.strip() for x in (sido or "").split(",") if x.strip()] or [None]
+    for h in (h for sd in sidos for h in iter_hospitals(sido=sd, cl_codes=cl)):
         if not h.get("ykiho"):
             continue
         row = conn.execute("SELECT id, dr_tot_cnt FROM hospitals WHERE ykiho=?", (h["ykiho"],)).fetchone()

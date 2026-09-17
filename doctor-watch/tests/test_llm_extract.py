@@ -48,3 +48,21 @@ def test_extract_falls_back_to_heuristic_when_llm_fails(monkeypatch):
     monkeypatch.setattr(extract, "extract_with_llm", boom)
     doctors, method = extract.extract("정형외과\n박준호 과장", "병원", "http://x")
     assert method == "heuristic" and doctors[0]["name"] == "박준호"
+
+
+def test_llm_pick_staff_links(monkeypatch):
+    from doctor_watch import discover
+
+    html = """<html><body>
+      <a href="/notice">공지사항</a><a href="/about/greeting">인사말</a>
+      <a href="/m/team.do">진료팀</a><a href="/recruit">채용</a></body></html>"""
+
+    class _M:
+        def create(self, **kw):
+            listing = kw["messages"][0]["content"]
+            idx = [int(l.split("\t")[0]) for l in listing.splitlines() if "\t" in l and "team.do" in l]
+            return SimpleNamespace(stop_reason="end_turn", content=[SimpleNamespace(type="text", text=json.dumps({"indices": idx}))])
+
+    monkeypatch.setattr(extract, "_get_client", lambda: SimpleNamespace(messages=_M()))
+    urls = discover.llm_pick_staff_links("테스트병원", "http://h.test/", html)
+    assert urls == ["http://h.test/m/team.do"]

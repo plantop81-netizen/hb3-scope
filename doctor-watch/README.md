@@ -75,6 +75,10 @@ python -m doctor_watch serve                 # http://127.0.0.1:8000
 | Variable | `DOCTOR_WATCH_CONCURRENCY` | 동시 접속 수 (기본 8) |
 
 Actions 탭에서 **Run workflow** 로 수동 실행(테스트용 `limit`, `no_llm` 입력 가능)도 됩니다.
+
+병원 목록을 심평원에서 대량으로 받을 때는 별도 워크플로 **doctor-watch hospital sync** 를 수동 실행하세요
+(시도·종별 입력, 기본 영남 5개 시도 / 상급종합·종합병원·병원·요양병원·정신병원). 공공데이터포털이 해외 IP 에 느려
+수십 분 걸릴 수 있으며, 완료되면 DB 가 커밋되고 다음 주간 실행부터 반영됩니다.
 주간 보고서는 `doctor-watch/reports/index.html` 에 항상 최신본이 커밋되며, 워크플로 artifact 로도 받을 수 있습니다.
 
 ## 웹 대시보드
