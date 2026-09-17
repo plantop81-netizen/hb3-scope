@@ -174,6 +174,8 @@ def html_report(b: dict[str, Any]) -> str:
     .tag{display:inline-block;border-radius:4px;padding:1px 6px;font-size:12px;margin-right:6px;color:#fff}
     .joined{background:#1a8f5a}.left{background:#c0392b}.dept_changed{background:#b7791f}.position_changed{background:#4b5563}.hira_count_changed{background:#2563eb}
     .star{color:#d97706} .muted{color:#6b7280;font-size:12px} ul{padding-left:18px} li{margin:3px 0}
+    nav{display:flex;gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid #e5e7eb;margin-bottom:18px;flex-wrap:wrap}
+    nav .brand{font-weight:700;font-size:16px;color:#111;text-decoration:none}nav a{color:#0d5c69;text-decoration:none}nav a.on{font-weight:700}
     """
     parts = [f"<meta charset='utf-8'><title>의료진 변동 브리핑 {e(date)}</title><style>{css}</style>"]
     parts.append(f"<h1>🩺 의료진 변동 주간 브리핑 <span class='muted'>{e(date)} · {e(run['week_key'] if run else '')}</span></h1>")
@@ -245,6 +247,160 @@ def write_reports(conn: sqlite3.Connection, run_id: int | None = None, out_dir: 
     files["md"].write_text(md, encoding="utf-8")
     files["html"].write_text(ht, encoding="utf-8")
     files["latest_md"].write_text(md, encoding="utf-8")
-    files["latest_html"].write_text(ht, encoding="utf-8")
+    # 최신 브리핑은 정적 사이트의 첫 화면: 공통 내비게이션을 붙인다
+    files["latest_html"].write_text(ht.replace("<h1>", _nav("index.html") + "<h1>", 1), encoding="utf-8")
+    write_site(conn, out_dir)
     files["json"].write_text(json.dumps({k: v for k, v in b.items() if k != "by_hospital"}, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
     return files
+
+
+# ── 정적 대시보드 (GitHub Pages 등 정적 호스팅용) ─────────────────────────
+SITE_CSS = """
+body{font-family:-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;max-width:1100px;margin:0 auto;padding:0 16px 40px;color:#111;background:#fff}
+nav{display:flex;gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid #e5e7eb;margin-bottom:18px;flex-wrap:wrap}
+nav .brand{font-weight:700;font-size:16px;color:#111;text-decoration:none}nav a{color:#0d5c69;text-decoration:none}nav a.on{font-weight:700}
+h1{font-size:22px} h2{font-size:17px;margin-top:28px;border-bottom:1px solid #ddd;padding-bottom:6px} h3{font-size:15px;margin:18px 0 6px}
+.kpi{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}.kpi div{background:#f4f6f8;border-radius:8px;padding:10px 14px;min-width:120px}.kpi b{display:block;font-size:20px}
+table{border-collapse:collapse;width:100%;font-size:14px} th,td{border-bottom:1px solid #e5e7eb;padding:6px 8px;text-align:left;vertical-align:top} th{color:#6b7280;font-size:12px}
+.tag{display:inline-block;border-radius:4px;padding:1px 6px;font-size:12px;margin-right:6px;color:#fff}
+.joined{background:#1a8f5a}.left{background:#c0392b}.dept_changed{background:#b7791f}.position_changed{background:#4b5563}.hira_count_changed{background:#2563eb}
+.ok{color:#1a8f5a}.err{color:#c0392b}.muted{color:#6b7280;font-size:12px} ul{padding-left:18px} li{margin:3px 0} a{color:#0d5c69}
+input[type=text]{width:100%;max-width:480px;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font:inherit}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}@media(max-width:800px){.grid{grid-template-columns:1fr}}
+"""
+
+
+def _nav(active: str) -> str:
+    items = [("index.html", "브리핑"), ("hospitals.html", "병원"), ("search.html", "의사 검색"), ("runs.html", "실행 이력")]
+    links = "".join(f"<a href='{href}' class='{'on' if href == active else ''}'>{label}</a>" for href, label in items)
+    return f"<nav><a class='brand' href='index.html'>🩺 doctor-watch</a>{links}</nav>"
+
+
+def _page(title: str, active: str, body: str) -> str:
+    return f"<!doctype html><html lang='ko'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>{html.escape(title)}</title><style>{SITE_CSS}</style></head><body>{_nav(active)}{body}<p class='muted'>생성 {datetime.now().strftime('%Y-%m-%d %H:%M')} · doctor-watch</p></body></html>"
+
+
+def write_site(conn: sqlite3.Connection, out_dir: Path | None = None) -> list[Path]:
+    """병원 목록 / 병원별 명단·이력 / 의사 검색 / 실행 이력 정적 페이지 생성."""
+    e = html.escape
+    out_dir = out_dir or settings.reports_dir
+    out_dir.mkdir(parents=True, exist_ok=True)
+    written: list[Path] = []
+
+    hospitals = conn.execute(
+        """
+        SELECT h.*, hr.ok AS last_ok, hr.doctor_count, hr.error AS last_error, hr.run_id AS last_run
+        FROM hospitals h
+        LEFT JOIN hospital_runs hr ON hr.hospital_id=h.id AND hr.run_id=(SELECT MAX(run_id) FROM hospital_runs WHERE hospital_id=h.id)
+        WHERE h.active=1 ORDER BY h.sido, h.name
+        """
+    ).fetchall()
+
+    # 병원 목록
+    rows = []
+    for h in hospitals:
+        status = "<span class='ok'>정상</span>" if h["last_ok"] else (f"<span class='err'>{e((h['last_error'] or '')[:60])}</span>" if h["last_error"] else "<span class='muted'>미수집</span>")
+        rows.append(
+            f"<tr><td><a href='hospital-{h['id']}.html'>{e(h['name'])}</a></td><td>{e(h['sido'] or '')}</td><td>{e(h['cl_name'] or '')}</td>"
+            f"<td>{('<a href=%s target=_blank rel=noopener>%s</a>' % (e(h['url']), e(h['url'].replace('https://', '').replace('http://', '')[:40]))) if h['url'] else ''}</td>"
+            f"<td>{h['doctor_count'] if h['doctor_count'] is not None else ''}</td><td>{status}</td></tr>"
+        )
+    body = f"<h1>병원 <span class='muted'>{len(hospitals)}곳</span></h1><table><tr><th>병원</th><th>시도</th><th>종별</th><th>홈페이지</th><th>의사 수</th><th>최근 상태</th></tr>{''.join(rows)}</table>"
+    p = out_dir / "hospitals.html"
+    p.write_text(_page("병원 · doctor-watch", "hospitals.html", body), encoding="utf-8")
+    written.append(p)
+
+    # 병원별 페이지 + 검색용 데이터
+    search_rows: list[dict[str, Any]] = []
+    for h in hospitals:
+        last = conn.execute("SELECT MAX(run_id) AS r FROM hospital_runs WHERE hospital_id=? AND ok=1", (h["id"],)).fetchone()["r"]
+        roster = D.load_roster(conn, last, h["id"]) if last else []
+        by_dept: dict[str, list] = defaultdict(list)
+        for d in roster:
+            by_dept[d["department"] or "(진료과 미표기)"].append(d)
+            search_rows.append({"n": d["name"], "h": h["name"], "hid": h["id"], "d": d["department"] or "", "p": d["position"] or ""})
+        changes = conn.execute(
+            "SELECT c.*, rh.name AS related_hospital_name, ru.week_key FROM changes c LEFT JOIN hospitals rh ON rh.id=c.related_hospital_id JOIN runs ru ON ru.id=c.run_id WHERE c.hospital_id=? ORDER BY c.id DESC LIMIT 300",
+            (h["id"],),
+        ).fetchall()
+        history = conn.execute(
+            "SELECT hr.*, ru.week_key, ru.started_at FROM hospital_runs hr JOIN runs ru ON ru.id=hr.run_id WHERE hr.hospital_id=? ORDER BY hr.run_id DESC LIMIT 30",
+            (h["id"],),
+        ).fetchall()
+        staff_urls = D.hospital_staff_urls(h)
+        parts = [f"<h1>{e(h['name'])} <span class='muted'>{e(h['sido'] or '')} {e(h['cl_name'] or '')}</span></h1>"]
+        parts.append(f"<p>{('<a href=%s target=_blank rel=noopener>%s</a>' % (e(h['url']), e(h['url']))) if h['url'] else ''} <span class='muted'>{e(h['addr'] or '')}{(' · 심평원 신고 의사 %d명' % h['dr_tot_cnt']) if h['dr_tot_cnt'] else ''}</span></p>")
+        if staff_urls:
+            parts.append("<p class='muted'>의료진 페이지: " + " · ".join(f"<a href='{e(u)}' target='_blank' rel='noopener'>{e(u[:70])}</a>" for u in staff_urls[:6]) + (f" 외 {len(staff_urls) - 6}" if len(staff_urls) > 6 else "") + "</p>")
+        parts.append("<div class='grid'><div>")
+        parts.append(f"<h2>현재 의료진 <span class='muted'>{len({d['name_key'] for d in roster})}명 · {len(by_dept)}개 진료과</span></h2>")
+        for dept, ds in sorted(by_dept.items()):
+            parts.append(f"<h3>{e(dept)} <span class='muted'>{len(ds)}</span></h3><ul>" + "".join(f"<li><b>{e(d['name'])}</b> {e(d['position'] or '')} <span class='muted'>{e((d['specialty'] or '')[:60])}</span></li>" for d in ds) + "</ul>")
+        parts.append("</div><div>")
+        parts.append(f"<h2>변동 이력 <span class='muted'>{len(changes)}건</span></h2>")
+        if changes:
+            parts.append("<table><tr><th>주차</th><th>유형</th><th>이름</th><th>진료과</th><th>비고</th></tr>")
+            for c in changes:
+                note = ""
+                if c["related_hospital_name"]:
+                    note = ("→ " if c["kind"] == "left" else "← ") + e(c["related_hospital_name"])
+                elif c["prev_department"] and c["kind"] == "dept_changed":
+                    note = "이전 " + e(c["prev_department"])
+                elif c["prev_position"] and c["kind"] == "position_changed":
+                    note = "이전 " + e(c["prev_position"])
+                parts.append(f"<tr><td>{e(c['week_key'])}</td><td><span class='tag {e(c['kind'])}'>{e(KIND_LABEL.get(c['kind'], c['kind']))}</span></td><td>{e(c['name'])}</td><td>{e(c['department'] or '')}</td><td>{note}</td></tr>")
+            parts.append("</table>")
+        else:
+            parts.append("<p class='muted'>기록된 변동 없음</p>")
+        parts.append("<h2>수집 이력</h2><table><tr><th>주차</th><th>결과</th><th>의사</th><th>페이지</th><th>LLM</th></tr>")
+        for x in history:
+            res = "<span class='ok'>성공</span>" if x["ok"] else "<span class='err'>실패</span>"
+            parts.append(f"<tr><td>{e(x['week_key'] or '')}</td><td>{res} <span class='muted'>{e((x['error'] or '')[:70])}</span></td><td>{x['doctor_count']}</td><td>{x['pages_ok']}/{x['pages_ok'] + x['pages_failed']}</td><td>{x['llm_calls']}</td></tr>")
+        parts.append("</table></div></div>")
+        p = out_dir / f"hospital-{h['id']}.html"
+        p.write_text(_page(f"{h['name']} · doctor-watch", "hospitals.html", "".join(parts)), encoding="utf-8")
+        written.append(p)
+
+    # 의사 검색 (클라이언트 측)
+    change_rows = [
+        {"n": r["name"], "h": r["hospital_name"], "hid": r["hospital_id"], "k": KIND_LABEL.get(r["kind"], r["kind"]), "d": r["department"] or "", "w": r["week_key"], "r": r["related_hospital_name"] or ""}
+        for r in conn.execute(
+            "SELECT c.name, c.kind, c.department, c.hospital_id, h.name AS hospital_name, rh.name AS related_hospital_name, ru.week_key FROM changes c JOIN hospitals h ON h.id=c.hospital_id LEFT JOIN hospitals rh ON rh.id=c.related_hospital_id JOIN runs ru ON ru.id=c.run_id ORDER BY c.id DESC LIMIT 5000"
+        ).fetchall()
+    ]
+    data_json = json.dumps({"roster": search_rows, "changes": change_rows}, ensure_ascii=False).replace("</", "<\\/")
+    body = f"""
+<h1>의사 검색</h1>
+<p><input type='text' id='q' placeholder='이름 또는 병원·진료과 (예: 김민수, 소화기내과)' autofocus> <span class='muted' id='cnt'></span></p>
+<h2>현재 소속</h2><table><tr><th>이름</th><th>병원</th><th>진료과</th><th>직위</th></tr><tbody id='r'></tbody></table>
+<h2>변동 이력</h2><table><tr><th>주차</th><th>유형</th><th>이름</th><th>병원</th><th>진료과</th><th>이동</th></tr><tbody id='c'></tbody></table>
+<script>
+const DATA={data_json};
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}}[m]));
+function run(){{
+  const q=document.getElementById('q').value.trim().replace(/\\s+/g,'');
+  const R=document.getElementById('r'),C=document.getElementById('c');
+  if(!q){{R.innerHTML='';C.innerHTML='';document.getElementById('cnt').textContent='';return;}}
+  const m=DATA.roster.filter(x=>(x.n+x.h+x.d).replace(/\\s+/g,'').includes(q)).slice(0,300);
+  R.innerHTML=m.map(x=>`<tr><td><b>${{esc(x.n)}}</b></td><td><a href='hospital-${{x.hid}}.html'>${{esc(x.h)}}</a></td><td>${{esc(x.d)}}</td><td>${{esc(x.p)}}</td></tr>`).join('');
+  const c=DATA.changes.filter(x=>(x.n+x.h+x.d).replace(/\\s+/g,'').includes(q)).slice(0,300);
+  C.innerHTML=c.map(x=>`<tr><td>${{esc(x.w)}}</td><td>${{esc(x.k)}}</td><td>${{esc(x.n)}}</td><td><a href='hospital-${{x.hid}}.html'>${{esc(x.h)}}</a></td><td>${{esc(x.d)}}</td><td>${{esc(x.r)}}</td></tr>`).join('');
+  document.getElementById('cnt').textContent=`${{m.length}}명 · 변동 ${{c.length}}건`;
+}}
+document.getElementById('q').addEventListener('input',run);
+const u=new URLSearchParams(location.search).get('q'); if(u){{document.getElementById('q').value=u;run();}}
+</script>"""
+    p = out_dir / "search.html"
+    p.write_text(_page("의사 검색 · doctor-watch", "search.html", body), encoding="utf-8")
+    written.append(p)
+
+    # 실행 이력
+    rows = []
+    for r in D.list_runs(conn, 100):
+        s = D.stats_of(r)
+        rows.append(f"<tr><td>{r['id']}</td><td>{e(r['week_key'] or '')}</td><td>{e(r['started_at'][:16])}</td><td>{e((r['finished_at'] or '')[:16])}</td><td>{e(r['status'])}</td><td>{s.get('hospitals', '')} ({s.get('ok', '')}/{s.get('failed', '')})</td><td>{s.get('doctors', '')}</td><td>{s.get('changes', '')}</td><td>{s.get('moves', '')}</td><td>{s.get('llm_calls', '')}</td></tr>")
+    body = "<h1>실행 이력</h1><table><tr><th>#</th><th>주차</th><th>시작</th><th>종료</th><th>상태</th><th>병원(성공/실패)</th><th>의사</th><th>변동</th><th>이직</th><th>LLM</th></tr>" + "".join(rows) + "</table>"
+    p = out_dir / "runs.html"
+    p.write_text(_page("실행 이력 · doctor-watch", "runs.html", body), encoding="utf-8")
+    written.append(p)
+    return written
