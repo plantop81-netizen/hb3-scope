@@ -23,20 +23,27 @@ def cmd_init_hospitals(a: argparse.Namespace) -> None:
     cl = [c.strip() for c in a.cl.split(",") if c.strip()] if a.cl else ["상급종합", "종합병원", "병원"]
     sidos = [s.strip() for s in a.sido.split(",") if s.strip()] or [None]
     n = n_url = 0
-    try:
-        with D.session() as conn:
-            for sido in sidos:
-                for h in iter_hospitals(sido=sido, cl_codes=cl):
-                    if a.with_url_only and not h.get("url"):
-                        continue
-                    D.upsert_hospital(conn, h)
-                    n += 1
-                    n_url += 1 if h.get("url") else 0
-    except HiraError as e:
-        print(f"심평원 연동 실패: {e}", file=sys.stderr)
-        print(f"(실패 전까지 저장 {n}곳)")
-        sys.exit(2)
+    failed: list[str] = []
+    conn = D.connect()
+    for sido in sidos:
+        try:
+            for h in iter_hospitals(sido=sido, cl_codes=cl):
+                if a.with_url_only and not h.get("url"):
+                    continue
+                D.upsert_hospital(conn, h)
+                n += 1
+                n_url += 1 if h.get("url") else 0
+            conn.commit()  # 시도 단위로 저장해 중간 실패 시에도 앞 결과는 남긴다
+            print(f"{sido or '전국'}: 누적 저장 {n}곳", flush=True)
+        except (HiraError, Exception) as e:  # noqa: BLE001
+            conn.commit()
+            failed.append(f"{sido}: {e}")
+            print(f"심평원 연동 실패 [{sido}]: {e}", file=sys.stderr, flush=True)
+    conn.close()
     print(f"저장 {n}곳 (홈페이지 보유 {n_url}곳)")
+    if failed:
+        print("실패한 시도:", "; ".join(failed), file=sys.stderr)
+        sys.exit(2)
 
 
 def cmd_hira_test(a: argparse.Namespace) -> None:
