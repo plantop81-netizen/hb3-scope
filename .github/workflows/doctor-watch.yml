@@ -63,6 +63,7 @@ jobs:
       - name: Sync hospital list from HIRA (best effort)
         if: env.HIRA_SERVICE_KEY != ''
         continue-on-error: true
+        timeout-minutes: 15
         run: |
           python -m doctor_watch init-hospitals --sido "${{ vars.DOCTOR_WATCH_SIDO || '' }}" --with-url-only
           python -m doctor_watch hira-counts --sido "${{ vars.DOCTOR_WATCH_SIDO || '' }}" || true
