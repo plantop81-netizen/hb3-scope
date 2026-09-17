@@ -75,6 +75,11 @@ jobs:
       - name: Merge curated hospital CSV
         run: python -m doctor_watch import-hospitals data/hospitals.seed.csv
 
+      # 고객(관심) 의사 명단: data/watchlist.csv (열: name,hospital,department,memo) 가 있으면 반영
+      - name: Import customer watchlist
+        run: |
+          if [ -f data/watchlist.csv ]; then python -m doctor_watch watchlist import --csv data/watchlist.csv; fi
+
       - name: Collect, diff, report
         run: |
           ARGS="--report"

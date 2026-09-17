@@ -353,8 +353,19 @@ def list_watchlist(conn: sqlite3.Connection) -> list[sqlite3.Row]:
 
 
 def add_watch(conn: sqlite3.Connection, name: str, hospital_name: str | None, department: str | None, memo: str | None) -> int:
+    """같은 이름+병원+진료과가 이미 있으면 메모만 갱신하고 기존 id 를 돌려준다 (CSV 반복 등록 방지)."""
     from .names import name_key
 
+    hosp = (hospital_name or "").strip() or None
+    dept = (department or "").strip() or None
+    row = conn.execute(
+        "SELECT id FROM watchlist WHERE name_key=? AND IFNULL(hospital_name,'')=IFNULL(?,'') AND IFNULL(department,'')=IFNULL(?,'')",
+        (name_key(name), hosp, dept),
+    ).fetchone()
+    if row:
+        if memo:
+            conn.execute("UPDATE watchlist SET memo=? WHERE id=?", (memo, row["id"]))
+        return int(row["id"])
     cur = conn.execute(
         "INSERT INTO watchlist (name, name_key, hospital_name, department, memo, created_at) VALUES (?,?,?,?,?,?)",
         (name.strip(), name_key(name), (hospital_name or "").strip() or None, (department or "").strip() or None, memo, now_iso()),

@@ -42,7 +42,7 @@ python -m doctor_watch init-hospitals --sido 부산,울산,경남 --with-url-onl
 #    또는 CSV 로 직접 등록 (name,url,staff_urls ...)
 python -m doctor_watch import-hospitals data/hospitals.seed.csv
 
-# 2) 고객 의사 명단 등록 (선택)
+# 2) 고객 의사 명단 등록 (선택) — GitHub Actions 에서는 data/watchlist.csv 파일을 커밋해 두면 매주 자동 반영
 python -m doctor_watch watchlist import --csv data/watchlist.example.csv
 
 # 3) 첫 수집 (기준선) — 몇 곳만 먼저 시험
