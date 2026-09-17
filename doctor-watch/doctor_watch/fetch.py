@@ -117,9 +117,14 @@ class Fetcher:
 
     async def _get_http(self, url: str) -> Page:
         last_err = None
+        headers: dict[str, str] | None = None
         for attempt in range(3):
             try:
-                r = await self.client.get(url)
+                r = await self.client.get(url, headers=headers)
+                if r.status_code == 403 and headers is None:
+                    # 봇 UA 를 막는 사이트: 일반 브라우저 UA 로 한 번 더
+                    headers = {"User-Agent": BROWSER_UA}
+                    continue
                 if r.status_code >= 500 and attempt < 2:
                     await asyncio.sleep(1.5 * (attempt + 1))
                     continue
@@ -152,6 +157,8 @@ class Fetcher:
             log.debug("render failed %s: %s", url, e)
             return None
 
+
+BROWSER_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
 
 _JS_HINTS = re.compile(r'id="(root|app|__next|__nuxt)"|ng-app|data-reactroot|vue\.js|react\.', re.I)
 

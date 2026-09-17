@@ -19,35 +19,46 @@ def _index(rows: list[sqlite3.Row] | list[dict[str, Any]]) -> dict[str, list[dic
 
 
 def diff_rosters(prev: list, cur: list) -> list[dict[str, Any]]:
-    """병원 하나의 이전/현재 명단 비교 → [{kind, name, ...}]."""
+    """병원 하나의 이전/현재 명단 비교 → [{kind, name, ...}].
+
+    같은 병원 안에서 같은 이름은 한 사람으로 본다(대학병원은 한 교수가 진료과·센터 페이지 여러 곳에 실린다).
+    - 이전에 없던 이름 → joined, 현재 없는 이름 → left
+    - 둘 다 있는데 진료과 집합이 전혀 겹치지 않으면 → dept_changed
+    - 직위가 (하나로 확정되고) 바뀌면 → position_changed
+    """
     p, c = _index(prev), _index(cur)
     changes: list[dict[str, Any]] = []
+
+    def depts(rows: list[dict[str, Any]]) -> list[str]:
+        seen: list[str] = []
+        for r in rows:
+            d = r.get("department")
+            if d and d not in seen:
+                seen.append(d)
+        return seen
+
+    def positions(rows: list[dict[str, Any]]) -> set[str]:
+        return {r["position"] for r in rows if r.get("position")}
+
     for key, cur_rows in c.items():
-        prev_rows = p.get(key, [])
+        prev_rows = p.get(key)
+        rep = _pick(cur_rows[0])
+        rep["department"] = " / ".join(depts(cur_rows)) or None
         if not prev_rows:
-            for r in cur_rows:
-                changes.append({"kind": "joined", **_pick(r)})
+            changes.append({"kind": "joined", **rep})
             continue
-        # 동명이인 처리: 진료과 기준으로 짝을 맞춘다
-        prev_by_dept = {(r.get("department") or ""): r for r in prev_rows}
-        cur_by_dept = {(r.get("department") or ""): r for r in cur_rows}
-        for dept, r in cur_by_dept.items():
-            if dept in prev_by_dept:
-                pr = prev_by_dept[dept]
-                if (pr.get("position") or "") != (r.get("position") or "") and pr.get("position") and r.get("position"):
-                    changes.append({"kind": "position_changed", **_pick(r), "prev_department": pr.get("department"), "prev_position": pr.get("position")})
-            elif len(prev_rows) == 1 and len(cur_rows) == 1:
-                pr = prev_rows[0]
-                changes.append({"kind": "dept_changed", **_pick(r), "prev_department": pr.get("department"), "prev_position": pr.get("position")})
-            elif len(cur_by_dept) > len(prev_by_dept):
-                changes.append({"kind": "joined", **_pick(r)})
-        for dept, pr in prev_by_dept.items():
-            if dept not in cur_by_dept and not (len(prev_rows) == 1 and len(cur_rows) == 1) and len(prev_by_dept) > len(cur_by_dept):
-                changes.append({"kind": "left", **_pick(pr)})
+        pd, cd = depts(prev_rows), depts(cur_rows)
+        if pd and cd and not (set(pd) & set(cd)):
+            changes.append({"kind": "dept_changed", **rep, "prev_department": " / ".join(pd), "prev_position": (prev_rows[0].get("position"))})
+            continue
+        pp, cp = positions(prev_rows), positions(cur_rows)
+        if len(pp) == 1 and len(cp) == 1 and pp != cp:
+            changes.append({"kind": "position_changed", **rep, "position": next(iter(cp)), "prev_department": " / ".join(pd) or None, "prev_position": next(iter(pp))})
     for key, prev_rows in p.items():
         if key not in c:
-            for r in prev_rows:
-                changes.append({"kind": "left", **_pick(r)})
+            rep = _pick(prev_rows[0])
+            rep["department"] = " / ".join(depts(prev_rows)) or None
+            changes.append({"kind": "left", **rep})
     return changes
 
 
@@ -105,8 +116,11 @@ def link_moves(conn: sqlite3.Connection, run_id: int) -> int:
             for j in joined.get(key, []):
                 if j["related_change_id"] is not None or j["hospital_id"] == l["hospital_id"]:
                     continue
-                if l["department"] and j["department"] and l["department"] != j["department"]:
-                    continue
+                if l["department"] and j["department"]:
+                    ld = {x.strip() for x in l["department"].split("/")}
+                    jd = {x.strip() for x in j["department"].split("/")}
+                    if not (ld & jd):
+                        continue
                 # 이번 실행에서 잡힌 변동이 최소 한쪽에는 있어야 한다
                 if l["run_id"] != run_id and j["run_id"] != run_id:
                     continue

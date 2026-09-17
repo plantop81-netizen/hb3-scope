@@ -191,11 +191,19 @@ async def run_collection(
             continue  # 최초 스냅샷은 기준선으로만 사용
         prev = D.load_roster(conn, prev_run, h["id"])
         cur = D.load_roster(conn, run_id, h["id"])
-        # 명단이 통째로 사라진 경우(사이트 개편 등)는 오탐 가능성이 높아 '검토 필요' 로만 기록
-        if prev and cur and len(cur) < len(prev) * 0.5 and len(prev) >= 6:
+        # 명단이 통째로 사라지거나(사이트 개편) 갑자기 크게 늘어난 경우(수집 범위 확대)는
+        # 사람의 이동이 아니라 수집 조건 변화일 가능성이 높으므로 변동으로 세지 않고 기준선만 갱신한다.
+        np_, nc = len({r["name_key"] for r in prev}), len({r["name_key"] for r in cur})
+        if prev and cur and np_ >= 6 and nc < np_ * 0.5:
             conn.execute(
                 "UPDATE hospital_runs SET error=? WHERE run_id=? AND hospital_id=?",
-                (f"의료진 수 급감({len(prev)}→{len(cur)}): 페이지 구조 변경 여부 확인 필요", run_id, h["id"]),
+                (f"의료진 수 급감({np_}→{nc}): 페이지 구조 변경 여부 확인 필요 (변동 미집계)", run_id, h["id"]),
+            )
+            continue
+        if prev and cur and nc - np_ >= 10 and nc > np_ * 1.5:
+            conn.execute(
+                "UPDATE hospital_runs SET error=? WHERE run_id=? AND hospital_id=?",
+                (f"의료진 수 급증({np_}→{nc}): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)", run_id, h["id"]),
             )
             continue
         changes = diff_rosters(prev, cur)

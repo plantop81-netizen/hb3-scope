@@ -37,8 +37,11 @@ def test_diff_dept_change_is_not_leave():
     assert [c["kind"] for c in ch] == ["dept_changed"]
 
 
-def test_diff_same_name_two_people():
-    prev = [_r("김민수", "내과"), _r("김민수", "외과")]
-    cur = [_r("김민수", "내과")]
-    ch = diff_rosters(prev, cur)
-    assert [(c["kind"], c["department"]) for c in ch] == [("left", "외과")]
+def test_diff_same_name_multiple_pages_is_one_person():
+    # 대학병원: 한 교수가 진료과 페이지와 센터 페이지에 모두 실림 → 한쪽에서 빠져도 '제외' 아님
+    prev = [_r("김민수", "소화기내과", "교수"), _r("김민수", "간센터", "교수")]
+    cur = [_r("김민수", "소화기내과", "교수")]
+    assert diff_rosters(prev, cur) == []
+    # 진료과 집합이 전혀 안 겹치면 진료과 변경
+    ch = diff_rosters([_r("김민수", "내과")], [_r("김민수", "소화기내과"), _r("김민수", "내시경센터")])
+    assert [(c["kind"], c["prev_department"], c["department"]) for c in ch] == [("dept_changed", "내과", "소화기내과 / 내시경센터")]
