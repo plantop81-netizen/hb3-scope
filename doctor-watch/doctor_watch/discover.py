@@ -137,3 +137,61 @@ def select_option_links(page_url: str, html: str) -> list[str]:
                 q[name] = val
                 out.append(urlunsplit(parts._replace(query=urlencode(q))))
     return out[: settings.max_pages_per_hospital]
+
+
+def all_links(base_url: str, html: str, limit: int = 250) -> list[tuple[str, str]]:
+    """(텍스트, url) 같은 사이트 내부 링크 목록 (LLM 선택용)."""
+    soup = BeautifulSoup(html, "lxml")
+    out: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for a in soup.find_all("a", href=True):
+        href = a["href"].strip()
+        if not href or href.startswith(("#", "javascript", "mailto", "tel")) or "void(" in href:
+            continue
+        url = _norm(urljoin(base_url, href))
+        if not same_site(base_url, url) or url in seen or NEGATIVE.search(url):
+            continue
+        text = a.get_text(" ", strip=True) or a.get("title", "") or (a.img.get("alt", "") if a.img else "")
+        seen.add(url)
+        out.append((re.sub(r"\s+", " ", text)[:40], url))
+        if len(out) >= limit:
+            break
+    return out
+
+
+def llm_pick_staff_links(hospital_name: str, base_url: str, html: str, max_links: int = 5) -> list[str]:
+    """규칙 탐색이 실패한 홈페이지: Claude 에게 링크 목록을 주고 의료진 소개 페이지로 보이는 URL 을 고르게 한다."""
+    import json
+
+    from .extract import _get_client
+
+    links = all_links(base_url, html)
+    if not links:
+        return []
+    listing = "\n".join(f"{i}\t{t}\t{u}" for i, (t, u) in enumerate(links))
+    schema = {
+        "type": "object",
+        "properties": {"indices": {"type": "array", "items": {"type": "integer"}}},
+        "required": ["indices"],
+        "additionalProperties": False,
+    }
+    resp = _get_client().messages.create(
+        model=settings.model,
+        max_tokens=512,
+        system=(
+            "병원 홈페이지의 링크 목록(번호, 링크 텍스트, URL)에서 의사/의료진 명단이 실려 있을 가능성이 높은 페이지를 고르는 도구입니다. "
+            "'의료진 소개', '진료과/의료진', '교수진', '의료진 검색', '진료과 안내(각 과에 의료진이 있는 경우)' 등이 해당합니다. "
+            "공지, 채용, 예약, 로그인, 오시는길 등은 제외합니다. 없으면 빈 배열."
+        ),
+        messages=[{"role": "user", "content": f"병원: {hospital_name}\n최대 {max_links}개 번호를 고르세요.\n\n{listing}"}],
+        output_config={"format": {"type": "json_schema", "schema": schema}, "effort": "low"} if not settings.model.startswith("claude-haiku")
+        else {"format": {"type": "json_schema", "schema": schema}},
+    )
+    if resp.stop_reason == "refusal":
+        return []
+    data = json.loads(next(b.text for b in resp.content if b.type == "text"))
+    out: list[str] = []
+    for i in data.get("indices", []):
+        if isinstance(i, int) and 0 <= i < len(links) and links[i][1] not in out:
+            out.append(links[i][1])
+    return out[:max_links]

@@ -33,10 +33,11 @@ jobs:
       HIRA_SERVICE_KEY: ${{ secrets.HIRA_SERVICE_KEY }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       DOCTOR_WATCH_MODEL: ${{ vars.DOCTOR_WATCH_MODEL || 'claude-opus-5' }}
-      DOCTOR_WATCH_CONCURRENCY: ${{ vars.DOCTOR_WATCH_CONCURRENCY || '8' }}
+      DOCTOR_WATCH_CONCURRENCY: ${{ vars.DOCTOR_WATCH_CONCURRENCY || '12' }}
       DOCTOR_WATCH_RENDER: ${{ vars.DOCTOR_WATCH_RENDER || 'auto' }}
       # 한 번 실행에서 Claude 호출 상한 (초과분은 규칙 기반 추출로 대체하고 보고서에 표시)
-      DOCTOR_WATCH_MAX_LLM_CALLS: ${{ vars.DOCTOR_WATCH_MAX_LLM_CALLS || '1500' }}
+      DOCTOR_WATCH_MAX_LLM_CALLS: ${{ vars.DOCTOR_WATCH_MAX_LLM_CALLS || '6000' }}
+      DOCTOR_WATCH_CL: ${{ vars.DOCTOR_WATCH_CL || '상급종합,종합병원,병원,요양병원,정신병원' }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -69,8 +70,8 @@ jobs:
         continue-on-error: true
         timeout-minutes: 15
         run: |
-          python -m doctor_watch init-hospitals --sido "${{ vars.DOCTOR_WATCH_SIDO }}" --with-url-only
-          python -m doctor_watch hira-counts --sido "${{ vars.DOCTOR_WATCH_SIDO }}" || true
+          python -m doctor_watch init-hospitals --sido "${{ vars.DOCTOR_WATCH_SIDO }}" --cl "$DOCTOR_WATCH_CL" --with-url-only
+          python -m doctor_watch hira-counts --sido "${{ vars.DOCTOR_WATCH_SIDO }}" --cl "$DOCTOR_WATCH_CL" || true
 
       - name: Merge curated hospital CSV
         run: python -m doctor_watch import-hospitals data/hospitals.seed.csv

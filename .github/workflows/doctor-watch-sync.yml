@@ -1,0 +1,64 @@
+name: doctor-watch hospital sync
+
+# 심평원 공공 API 로 병원 목록(홈페이지 URL 포함)을 받아 DB 에 등록하고 커밋한다.
+# 공공데이터포털이 해외 IP 에 느리거나 막힐 수 있어 주간 수집과 분리해 수동으로 돌린다.
+on:
+  workflow_dispatch:
+    inputs:
+      sido:
+        description: "시도 (콤마 구분)"
+        required: true
+        default: "부산,대구,울산,경남,경북"
+      cl:
+        description: "종별 (콤마 구분)"
+        required: true
+        default: "상급종합,종합병원,병원,요양병원,정신병원"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: doctor-watch
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    defaults:
+      run:
+        working-directory: doctor-watch
+    env:
+      HIRA_SERVICE_KEY: ${{ secrets.HIRA_SERVICE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: doctor-watch/requirements.txt
+      - name: Install
+        run: pip install -r requirements.txt
+      - name: Sync from HIRA
+        timeout-minutes: 140
+        run: |
+          python -m doctor_watch init-hospitals --sido "${{ github.event.inputs.sido }}" --cl "${{ github.event.inputs.cl }}" --with-url-only
+      - name: Merge curated hospital CSV
+        run: python -m doctor_watch import-hospitals data/hospitals.seed.csv
+      - name: Summary
+        run: |
+          python -m doctor_watch hospitals | tail -1
+          python - <<'PY'
+          import sqlite3
+          c = sqlite3.connect("data/doctor_watch.db")
+          print("시도별 병원 수 (홈페이지 보유):")
+          for r in c.execute("SELECT sido, cl_name, COUNT(*) FROM hospitals WHERE active=1 AND url IS NOT NULL GROUP BY sido, cl_name ORDER BY sido, cl_name"):
+              print("  ", r)
+          PY
+      - name: Commit DB
+        run: |
+          git config user.name "doctor-watch bot"
+          git config user.email "doctor-watch@users.noreply.github.com"
+          git add data/doctor_watch.db
+          git commit -m "doctor-watch: hospital sync ${{ github.event.inputs.sido }} ($(date -u +%Y-%m-%d))" || echo "no changes"
+          git push
