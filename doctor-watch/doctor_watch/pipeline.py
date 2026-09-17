@@ -9,7 +9,7 @@ from typing import Any
 
 from . import db as D
 from .config import settings
-from .diff import diff_rosters, link_moves, mark_watchlist_hits, record_changes
+from .diff import apply_snapshot, link_moves, mark_watchlist_hits, record_changes
 from .discover import candidate_links, department_links, select_option_links
 from .extract import extract
 from .fetch import Fetcher, content_hash, visible_text
@@ -114,6 +114,16 @@ async def collect_hospital(fetcher: Fetcher, conn_factory, hospital: sqlite3.Row
     return result
 
 
+def _ok_page_urls(conn: sqlite3.Connection, run_id: int, hospital_id: int) -> set[str]:
+    return {
+        r["url"]
+        for r in conn.execute(
+            "SELECT url FROM pages WHERE run_id=? AND hospital_id=? AND content_hash IS NOT NULL AND error IS NULL",
+            (run_id, hospital_id),
+        )
+    }
+
+
 def persist_result(conn: sqlite3.Connection, run_id: int, res: dict[str, Any]) -> None:
     hid = res["hospital_id"]
     ts = D.now_iso()
@@ -181,32 +191,35 @@ async def run_collection(
     finally:
         await fetcher.close()
 
-    # ── 비교 ──
+    # ── 비교 (상태표 기반: 2회 연속 확인 시 합류, 2회 연속 부재 시 제외) ──
     for h in hospitals:
         hr = conn.execute("SELECT ok FROM hospital_runs WHERE run_id=? AND hospital_id=?", (run_id, h["id"])).fetchone()
         if not hr or not hr["ok"]:
             continue
-        prev_run = D.previous_ok_run_for_hospital(conn, h["id"], run_id)
-        if prev_run is None:
-            continue  # 최초 스냅샷은 기준선으로만 사용
-        prev = D.load_roster(conn, prev_run, h["id"])
         cur = D.load_roster(conn, run_id, h["id"])
+        has_state = conn.execute("SELECT 1 FROM doctor_state WHERE hospital_id=? LIMIT 1", (h["id"],)).fetchone() is not None
+        if not has_state:
+            apply_snapshot(conn, run_id, h["id"], cur, set(), baseline=True)  # 최초 스냅샷은 기준선
+            continue
+        present = conn.execute("SELECT COUNT(*) FROM doctor_state WHERE hospital_id=? AND status='present'", (h["id"],)).fetchone()[0]
+        nc = len({r["name_key"] for r in cur})
         # 명단이 통째로 사라지거나(사이트 개편) 갑자기 크게 늘어난 경우(수집 범위 확대)는
-        # 사람의 이동이 아니라 수집 조건 변화일 가능성이 높으므로 변동으로 세지 않고 기준선만 갱신한다.
-        np_, nc = len({r["name_key"] for r in prev}), len({r["name_key"] for r in cur})
-        if prev and cur and np_ >= 6 and nc < np_ * 0.5:
+        # 사람의 이동이 아니라 수집 조건 변화일 가능성이 높으므로 변동으로 세지 않고 기준선을 다시 잡는다.
+        if present >= 6 and nc < present * 0.5:
             conn.execute(
                 "UPDATE hospital_runs SET error=? WHERE run_id=? AND hospital_id=?",
-                (f"의료진 수 급감({np_}→{nc}): 페이지 구조 변경 여부 확인 필요 (변동 미집계)", run_id, h["id"]),
+                (f"의료진 수 급감({present}→{nc}): 페이지 구조 변경 여부 확인 필요 (변동 미집계)", run_id, h["id"]),
             )
             continue
-        if prev and cur and nc - np_ >= 10 and nc > np_ * 1.5:
+        if nc - present >= 10 and nc > present * 1.5:
             conn.execute(
                 "UPDATE hospital_runs SET error=? WHERE run_id=? AND hospital_id=?",
-                (f"의료진 수 급증({np_}→{nc}): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)", run_id, h["id"]),
+                (f"의료진 수 급증({present}→{nc}): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)", run_id, h["id"]),
             )
+            conn.execute("DELETE FROM doctor_state WHERE hospital_id=?", (h["id"],))
+            apply_snapshot(conn, run_id, h["id"], cur, set(), baseline=True)
             continue
-        changes = diff_rosters(prev, cur)
+        changes = apply_snapshot(conn, run_id, h["id"], cur, _ok_page_urls(conn, run_id, h["id"]))
         stats["changes"] += record_changes(conn, run_id, h["id"], changes)
     conn.commit()
     stats["moves"] = link_moves(conn, run_id)
