@@ -103,6 +103,12 @@ def test_two_week_cycle(env, server):
         assert "고객 명단 변동" in summary_text(b)
         files = write_reports(conn, run2)
         assert files["latest_html"].exists() and files["md"].exists()
+        site = files["latest_html"].parent
+        assert (site / "hospitals.html").exists() and (site / "search.html").exists() and (site / "runs.html").exists()
+        hid = conn.execute("SELECT id FROM hospitals WHERE name='부산중앙병원'").fetchone()[0]
+        page = (site / f"hospital-{hid}.html").read_text(encoding="utf-8")
+        assert "이영희" in page and "← 하나종합병원" in page
+        assert "이영희" in (site / "search.html").read_text(encoding="utf-8")
 
 
 def test_web_app_renders(env):
