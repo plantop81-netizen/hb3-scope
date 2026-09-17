@@ -1,38 +1,107 @@
 {
  "run": {
-  "id": 9,
-  "started_at": "2026-09-17T06:05:05+00:00",
-  "finished_at": "2026-09-17T06:27:40+00:00",
+  "id": 10,
+  "started_at": "2026-09-17T06:37:36+00:00",
+  "finished_at": "2026-09-17T06:57:20+00:00",
   "status": "done",
   "week_key": "2026-W38",
-  "stats": "{\"hospitals\": 325, \"ok\": 104, \"failed\": 221, \"doctors\": 2410, \"llm_calls\": 1057, \"changes\": 11, \"moves\": 0, \"watchlist_hits\": 0}"
+  "stats": "{\"hospitals\": 322, \"ok\": 107, \"failed\": 215, \"doctors\": 2899, \"llm_calls\": 230, \"changes\": 16, \"moves\": 0, \"watchlist_hits\": 0}"
  },
  "stats": {
-  "hospitals": 325,
-  "ok": 104,
-  "failed": 221,
-  "doctors": 2410,
-  "llm_calls": 1057,
-  "changes": 11,
+  "hospitals": 322,
+  "ok": 107,
+  "failed": 215,
+  "doctors": 2899,
+  "llm_calls": 230,
+  "changes": 16,
   "moves": 0,
   "watchlist_hits": 0
  },
  "changes": [
   {
-   "id": 247,
-   "run_id": 9,
+   "id": 258,
+   "run_id": 10,
+   "hospital_id": 103,
+   "kind": "position_changed",
+   "name": "김정훈",
+   "name_key": "김정훈",
+   "department": "가정의학과",
+   "position": "건강증진센터 센터장",
+   "prev_department": "가정의학과",
+   "prev_position": "건강증진센터 센터장 · 전문의",
+   "related_hospital_id": null,
+   "related_change_id": null,
+   "watchlist_id": null,
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
+   "sido": "경남",
+   "cl_name": "종합병원",
+   "hospital_url": "https://www.yangsansm.com",
+   "related_hospital_name": null,
+   "watch_memo": null,
+   "watch_hospital": null
+  },
+  {
+   "id": 259,
+   "run_id": 10,
    "hospital_id": 103,
    "kind": "position_changed",
    "name": "김휘종",
    "name_key": "김휘종",
    "department": "내과",
-   "position": "진료과장 · 전문의 / 호흡기내과 분과 전문의 / 혈액투석 전담의",
+   "position": "진료과장",
+   "prev_department": "내과",
+   "prev_position": "진료과장 · 전문의 / 호흡기내과 분과 전문의 / 혈액투석 전담의",
+   "related_hospital_id": null,
+   "related_change_id": null,
+   "watchlist_id": null,
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
+   "sido": "경남",
+   "cl_name": "종합병원",
+   "hospital_url": "https://www.yangsansm.com",
+   "related_hospital_name": null,
+   "watch_memo": null,
+   "watch_hospital": null
+  },
+  {
+   "id": 260,
+   "run_id": 10,
+   "hospital_id": 103,
+   "kind": "position_changed",
+   "name": "오기영",
+   "name_key": "오기영",
+   "department": "내과",
+   "position": "내과센터장",
+   "prev_department": "내과",
+   "prev_position": "내과센터장 · 전문의",
+   "related_hospital_id": null,
+   "related_change_id": null,
+   "watchlist_id": null,
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
+   "sido": "경남",
+   "cl_name": "종합병원",
+   "hospital_url": "https://www.yangsansm.com",
+   "related_hospital_name": null,
+   "watch_memo": null,
+   "watch_hospital": null
+  },
+  {
+   "id": 261,
+   "run_id": 10,
+   "hospital_id": 103,
+   "kind": "position_changed",
+   "name": "정광진",
+   "name_key": "정광진",
+   "department": "내과",
+   "position": "진료과장",
    "prev_department": "내과",
    "prev_position": "진료과장 · 전문의",
    "related_hospital_id": null,
    "related_change_id": null,
    "watchlist_id": null,
-   "detected_at": "2026-09-17T06:27:40+00:00",
+   "detected_at": "2026-09-17T06:57:20+00:00",
    "hospital_name": "양산성모병원",
    "sido": "경남",
    "cl_name": "종합병원",
@@ -42,20 +111,20 @@
    "watch_hospital": null
   },
   {
-   "id": 248,
-   "run_id": 9,
+   "id": 262,
+   "run_id": 10,
    "hospital_id": 103,
    "kind": "position_changed",
-   "name": "강경탁",
-   "name_key": "강경탁",
-   "department": "신경외과",
-   "position": "뇌·척추센터장",
-   "prev_department": "신경외과",
-   "prev_position": "뇌.척추센터장",
+   "name": "김백진",
+   "name_key": "김백진",
+   "department": "마취통증의학과",
+   "position": "대표병원장",
+   "prev_department": "마취통증의학과",
+   "prev_position": "대표병원장 · 전문의",
    "related_hospital_id": null,
    "related_change_id": null,
    "watchlist_id": null,
-   "detected_at": "2026-09-17T06:27:40+00:00",
+   "detected_at": "2026-09-17T06:57:20+00:00",
    "hospital_name": "양산성모병원",
    "sido": "경남",
    "cl_name": "종합병원",
@@ -65,208 +134,254 @@
    "watch_hospital": null
   },
   {
-   "id": 249,
-   "run_id": 9,
-   "hospital_id": 113,
+   "id": 263,
+   "run_id": 10,
+   "hospital_id": 103,
    "kind": "position_changed",
-   "name": "강민지",
-   "name_key": "강민지",
-   "department": "산부인과",
-   "position": "과장",
-   "prev_department": "산부인과",
-   "prev_position": "전문의",
+   "name": "박진자",
+   "name_key": "박진자",
+   "department": "병리과",
+   "position": "진료과장",
+   "prev_department": "병리과",
+   "prev_position": "진료과장 · 전문의",
    "related_hospital_id": null,
    "related_change_id": null,
    "watchlist_id": null,
-   "detected_at": "2026-09-17T06:27:40+00:00",
-   "hospital_name": "제일병원",
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
    "sido": "경남",
    "cl_name": "종합병원",
-   "hospital_url": "http://www.chinjujeil.co.kr",
+   "hospital_url": "https://www.yangsansm.com",
    "related_hospital_name": null,
    "watch_memo": null,
    "watch_hospital": null
   },
   {
-   "id": 250,
-   "run_id": 9,
-   "hospital_id": 113,
+   "id": 264,
+   "run_id": 10,
+   "hospital_id": 103,
    "kind": "position_changed",
-   "name": "이종문",
-   "name_key": "이종문",
-   "department": "성형외과",
-   "position": "과장",
-   "prev_department": "성형외과",
-   "prev_position": "전문의",
+   "name": "최한수",
+   "name_key": "최한수",
+   "department": "소아청소년과",
+   "position": "진료과장",
+   "prev_department": "소아청소년과",
+   "prev_position": "진료과장 · 전문의",
    "related_hospital_id": null,
    "related_change_id": null,
    "watchlist_id": null,
-   "detected_at": "2026-09-17T06:27:40+00:00",
-   "hospital_name": "제일병원",
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
    "sido": "경남",
    "cl_name": "종합병원",
-   "hospital_url": "http://www.chinjujeil.co.kr",
+   "hospital_url": "https://www.yangsansm.com",
    "related_hospital_name": null,
    "watch_memo": null,
    "watch_hospital": null
   },
   {
-   "id": 251,
-   "run_id": 9,
-   "hospital_id": 113,
+   "id": 265,
+   "run_id": 10,
+   "hospital_id": 103,
    "kind": "position_changed",
-   "name": "김정희",
-   "name_key": "김정희",
+   "name": "황윤철",
+   "name_key": "황윤철",
    "department": "영상의학과",
-   "position": "과장",
+   "position": "진료과장",
    "prev_department": "영상의학과",
-   "prev_position": "전문의",
+   "prev_position": "진료과장 · 전문의",
    "related_hospital_id": null,
    "related_change_id": null,
    "watchlist_id": null,
-   "detected_at": "2026-09-17T06:27:40+00:00",
-   "hospital_name": "제일병원",
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
    "sido": "경남",
    "cl_name": "종합병원",
-   "hospital_url": "http://www.chinjujeil.co.kr",
+   "hospital_url": "https://www.yangsansm.com",
    "related_hospital_name": null,
    "watch_memo": null,
    "watch_hospital": null
   },
   {
-   "id": 252,
-   "run_id": 9,
-   "hospital_id": 340,
+   "id": 266,
+   "run_id": 10,
+   "hospital_id": 103,
    "kind": "position_changed",
-   "name": "고경균",
-   "name_key": "고경균",
-   "department": "신경과",
-   "position": "원장",
-   "prev_department": "신경과",
-   "prev_position": "과장",
+   "name": "박용근",
+   "name_key": "박용근",
+   "department": "외과",
+   "position": "외과센터장",
+   "prev_department": "외과",
+   "prev_position": "외과센터장 · 전문의",
    "related_hospital_id": null,
    "related_change_id": null,
    "watchlist_id": null,
-   "detected_at": "2026-09-17T06:27:40+00:00",
-   "hospital_name": "경주굿모닝병원",
-   "sido": "경북",
-   "cl_name": "병원",
-   "hospital_url": "http://www.경주굿모닝병원.com",
-   "related_hospital_name": null,
-   "watch_memo": null,
-   "watch_hospital": null
-  },
-  {
-   "id": 253,
-   "run_id": 9,
-   "hospital_id": 164,
-   "kind": "position_changed",
-   "name": "이지은",
-   "name_key": "이지은",
-   "department": "내분비내과",
-   "position": "교수, 내분비대사내과 과장",
-   "prev_department": null,
-   "prev_position": "교수",
-   "related_hospital_id": null,
-   "related_change_id": null,
-   "watchlist_id": null,
-   "detected_at": "2026-09-17T06:27:40+00:00",
-   "hospital_name": "차의과학대학교부속구미차병원",
-   "sido": "경북",
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
+   "sido": "경남",
    "cl_name": "종합병원",
-   "hospital_url": "http://kumi.chamc.co.kr",
+   "hospital_url": "https://www.yangsansm.com",
    "related_hospital_name": null,
    "watch_memo": null,
    "watch_hospital": null
   },
   {
-   "id": 254,
-   "run_id": 9,
-   "hospital_id": 164,
+   "id": 267,
+   "run_id": 10,
+   "hospital_id": 103,
    "kind": "position_changed",
-   "name": "이주환",
-   "name_key": "이주환",
-   "department": "심장내과",
-   "position": "교수/심장내과 과장",
-   "prev_department": null,
-   "prev_position": "교수",
+   "name": "강승철",
+   "name_key": "강승철",
+   "department": "응급의학과",
+   "position": "진료과장",
+   "prev_department": "응급의학과",
+   "prev_position": "진료과장 · 전담의",
    "related_hospital_id": null,
    "related_change_id": null,
    "watchlist_id": null,
-   "detected_at": "2026-09-17T06:27:40+00:00",
-   "hospital_name": "차의과학대학교부속구미차병원",
-   "sido": "경북",
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
+   "sido": "경남",
    "cl_name": "종합병원",
-   "hospital_url": "http://kumi.chamc.co.kr",
+   "hospital_url": "https://www.yangsansm.com",
    "related_hospital_name": null,
    "watch_memo": null,
    "watch_hospital": null
   },
   {
-   "id": 255,
-   "run_id": 9,
-   "hospital_id": 195,
+   "id": 268,
+   "run_id": 10,
+   "hospital_id": 103,
    "kind": "position_changed",
-   "name": "허성근",
-   "name_key": "허성근",
+   "name": "김상훈",
+   "name_key": "김상훈",
+   "department": "응급의학과",
+   "position": "진료과장",
+   "prev_department": "응급의학과",
+   "prev_position": "진료과장 · 전담의",
+   "related_hospital_id": null,
+   "related_change_id": null,
+   "watchlist_id": null,
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
+   "sido": "경남",
+   "cl_name": "종합병원",
+   "hospital_url": "https://www.yangsansm.com",
+   "related_hospital_name": null,
+   "watch_memo": null,
+   "watch_hospital": null
+  },
+  {
+   "id": 269,
+   "run_id": 10,
+   "hospital_id": 103,
+   "kind": "position_changed",
+   "name": "김지현",
+   "name_key": "김지현",
+   "department": "응급의학과",
+   "position": "진료과장",
+   "prev_department": "응급의학과",
+   "prev_position": "진료과장 · 전문의",
+   "related_hospital_id": null,
+   "related_change_id": null,
+   "watchlist_id": null,
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
+   "sido": "경남",
+   "cl_name": "종합병원",
+   "hospital_url": "https://www.yangsansm.com",
+   "related_hospital_name": null,
+   "watch_memo": null,
+   "watch_hospital": null
+  },
+  {
+   "id": 270,
+   "run_id": 10,
+   "hospital_id": 103,
+   "kind": "position_changed",
+   "name": "안옥균",
+   "name_key": "안옥균",
    "department": "정형외과",
-   "position": "병원장/이사장",
+   "position": "진료원장",
    "prev_department": "정형외과",
-   "prev_position": "병원장",
+   "prev_position": "진료원장 · 전문의(의학박사)",
    "related_hospital_id": null,
    "related_change_id": null,
    "watchlist_id": null,
-   "detected_at": "2026-09-17T06:27:40+00:00",
-   "hospital_name": "(의)서일의료재단기장병원",
-   "sido": "부산",
-   "cl_name": "병원",
-   "hospital_url": "http://www.gjhp.kr/",
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
+   "sido": "경남",
+   "cl_name": "종합병원",
+   "hospital_url": "https://www.yangsansm.com",
    "related_hospital_name": null,
    "watch_memo": null,
    "watch_hospital": null
   },
   {
-   "id": 256,
-   "run_id": 9,
-   "hospital_id": 27,
+   "id": 271,
+   "run_id": 10,
+   "hospital_id": 103,
    "kind": "position_changed",
-   "name": "김진경",
-   "name_key": "김진경",
-   "department": "신장내과",
-   "position": "전문의",
-   "prev_department": "신장내과",
-   "prev_position": "과장",
+   "name": "차명수",
+   "name_key": "차명수",
+   "department": "정형외과",
+   "position": "관절센터장",
+   "prev_department": "정형외과",
+   "prev_position": "관절센터장 · 전문의",
    "related_hospital_id": null,
    "related_change_id": null,
    "watchlist_id": null,
-   "detected_at": "2026-09-17T06:27:40+00:00",
-   "hospital_name": "재단법인천주교부산교구유지재단 메리놀병원",
-   "sido": "부산",
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
+   "sido": "경남",
    "cl_name": "종합병원",
-   "hospital_url": "http://www.maryknoll.co.kr",
+   "hospital_url": "https://www.yangsansm.com",
    "related_hospital_name": null,
    "watch_memo": null,
    "watch_hospital": null
   },
   {
-   "id": 257,
-   "run_id": 9,
-   "hospital_id": 27,
+   "id": 272,
+   "run_id": 10,
+   "hospital_id": 103,
    "kind": "position_changed",
-   "name": "이동렬",
-   "name_key": "이동렬",
-   "department": "신장내과",
-   "position": "신장이식센터장, 전문의",
-   "prev_department": "신장내과",
-   "prev_position": "진료과장",
+   "name": "우성준",
+   "name_key": "우성준",
+   "department": "직업환경의학과",
+   "position": "진료과장",
+   "prev_department": "직업환경의학과",
+   "prev_position": "진료과장 · 전문의",
    "related_hospital_id": null,
    "related_change_id": null,
    "watchlist_id": null,
-   "detected_at": "2026-09-17T06:27:40+00:00",
-   "hospital_name": "재단법인천주교부산교구유지재단 메리놀병원",
-   "sido": "부산",
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
+   "sido": "경남",
    "cl_name": "종합병원",
-   "hospital_url": "http://www.maryknoll.co.kr",
+   "hospital_url": "https://www.yangsansm.com",
+   "related_hospital_name": null,
+   "watch_memo": null,
+   "watch_hospital": null
+  },
+  {
+   "id": 273,
+   "run_id": 10,
+   "hospital_id": 103,
+   "kind": "position_changed",
+   "name": "서민우",
+   "name_key": "서민우",
+   "department": "치과",
+   "position": "진료과장",
+   "prev_department": "치과",
+   "prev_position": "진료과장 · 통합치의학 전문의",
+   "related_hospital_id": null,
+   "related_change_id": null,
+   "watchlist_id": null,
+   "detected_at": "2026-09-17T06:57:20+00:00",
+   "hospital_name": "양산성모병원",
+   "sido": "경남",
+   "cl_name": "종합병원",
+   "hospital_url": "https://www.yangsansm.com",
    "related_hospital_name": null,
    "watch_memo": null,
    "watch_hospital": null
@@ -276,7 +391,7 @@
  "watch_hits": [],
  "failed": [
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 294,
    "ok": 0,
    "doctor_count": 0,
@@ -288,7 +403,7 @@
    "url": "http://www.ujh.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 248,
    "ok": 0,
    "doctor_count": 0,
@@ -300,19 +415,7 @@
    "url": "http://www.bogang.co.kr/"
   },
   {
-   "run_id": 9,
-   "hospital_id": 32,
-   "ok": 1,
-   "doctor_count": 5,
-   "pages_ok": 2,
-   "pages_failed": 0,
-   "llm_calls": 2,
-   "error": "의료진 수 급감(14→5): 페이지 구조 변경 여부 확인 필요 (변동 미집계)",
-   "hospital_name": "(의)영님의료재단 개금중앙요양병원",
-   "url": "http://www.개금중앙요양병원.kr/"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 295,
    "ok": 0,
    "doctor_count": 0,
@@ -324,7 +427,7 @@
    "url": "http://ulsan.imc-boram.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 116,
    "ok": 0,
    "doctor_count": 0,
@@ -336,7 +439,7 @@
    "url": "http://gimhaenoin.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 310,
    "ok": 0,
    "doctor_count": 0,
@@ -348,7 +451,7 @@
    "url": "http://www.masan365.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 249,
    "ok": 0,
    "doctor_count": 0,
@@ -360,7 +463,7 @@
    "url": "http://www.msrhospital.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 311,
    "ok": 0,
    "doctor_count": 0,
@@ -372,7 +475,7 @@
    "url": "http://www.grandhospital.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 313,
    "ok": 0,
    "doctor_count": 0,
@@ -384,19 +487,7 @@
    "url": "http://www.rch.or.kr/geochang"
   },
   {
-   "run_id": 9,
-   "hospital_id": 237,
-   "ok": 0,
-   "doctor_count": 0,
-   "pages_ok": 0,
-   "pages_failed": 0,
-   "llm_calls": 0,
-   "error": "홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known",
-   "hospital_name": "경북대학교병원",
-   "url": "http://knumc.knu.ac.kr"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 97,
    "ok": 0,
    "doctor_count": 0,
@@ -405,10 +496,10 @@
    "llm_calls": 0,
    "error": "의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)",
    "hospital_name": "경상국립대학교병원",
-   "url": "http://www.gnuh.co.kr/"
+   "url": "https://www.gnuh.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 117,
    "ok": 0,
    "doctor_count": 0,
@@ -420,7 +511,7 @@
    "url": "http://www.gygh.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 100,
    "ok": 0,
    "doctor_count": 0,
@@ -432,7 +523,7 @@
    "url": "http://www.mmc.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 167,
    "ok": 0,
    "doctor_count": 0,
@@ -444,7 +535,7 @@
    "url": "http://www.gimcheonhp.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 168,
    "ok": 0,
    "doctor_count": 0,
@@ -456,7 +547,7 @@
    "url": "http://www.andongyuri.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 150,
    "ok": 0,
    "doctor_count": 0,
@@ -468,7 +559,7 @@
    "url": "http://amc.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 151,
    "ok": 0,
    "doctor_count": 0,
@@ -480,19 +571,19 @@
    "url": "http://www.pmc.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 169,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "경주시립노인전문요양병원",
    "url": "http://www.kjho.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 341,
    "ok": 0,
    "doctor_count": 0,
@@ -504,19 +595,19 @@
    "url": "http://kjds.or.kr/new/main/index.php"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 238,
    "ok": 0,
    "doctor_count": 0,
-   "pages_ok": 0,
+   "pages_ok": 4,
    "pages_failed": 0,
-   "llm_calls": 0,
-   "error": "의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)",
+   "llm_calls": 4,
+   "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "계명대학교동산병원",
-   "url": "http://www.dsmc.or.kr/"
+   "url": "https://dongsan.dsmc.or.kr:49870/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 305,
    "ok": 0,
    "doctor_count": 0,
@@ -528,7 +619,7 @@
    "url": "http://www.krhospital.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 242,
    "ok": 0,
    "doctor_count": 0,
@@ -540,7 +631,7 @@
    "url": "http://www.kwakh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 250,
    "ok": 0,
    "doctor_count": 0,
@@ -552,7 +643,7 @@
    "url": "https://www.gwanmun.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 251,
    "ok": 0,
    "doctor_count": 0,
@@ -564,7 +655,7 @@
    "url": "http://www.burn119.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 33,
    "ok": 0,
    "doctor_count": 0,
@@ -576,31 +667,31 @@
    "url": "http://www.xn--sy2btbu0l81m8hbmk.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 152,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 20,
    "pages_failed": 0,
-   "llm_calls": 20,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "구미강동병원",
    "url": "http://www.gumigd.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 170,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 2,
    "pages_failed": 0,
-   "llm_calls": 2,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "구미시립노인요양병원",
    "url": "http://www.gumihosp.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 314,
    "ok": 0,
    "doctor_count": 0,
@@ -612,7 +703,7 @@
    "url": "http://www.nmh.go.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 252,
    "ok": 0,
    "doctor_count": 0,
@@ -624,7 +715,7 @@
    "url": "http://www.kcomwel.or.kr/hospital/daegu/index.jsp"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 101,
    "ok": 0,
    "doctor_count": 0,
@@ -636,7 +727,7 @@
    "url": "http://www.kcomwel.or.kr/hospital/changwon/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 34,
    "ok": 0,
    "doctor_count": 0,
@@ -648,7 +739,7 @@
    "url": "http://www.hjyoyang.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 315,
    "ok": 0,
    "doctor_count": 0,
@@ -660,7 +751,7 @@
    "url": "http://www.khsmc.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 35,
    "ok": 0,
    "doctor_count": 0,
@@ -672,7 +763,7 @@
    "url": "http://www.nsj.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 118,
    "ok": 0,
    "doctor_count": 0,
@@ -684,7 +775,7 @@
    "url": "http://www.noksipjahospital.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 36,
    "ok": 0,
    "doctor_count": 0,
@@ -696,19 +787,19 @@
    "url": "http://cafe.daum.net/dsr."
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 280,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "달성요양병원",
    "url": "http://www.ds9988.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 281,
    "ok": 0,
    "doctor_count": 0,
@@ -720,7 +811,7 @@
    "url": "http://www.yes-naebumo.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 253,
    "ok": 0,
    "doctor_count": 0,
@@ -732,7 +823,7 @@
    "url": "http://dhch.ac.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 244,
    "ok": 0,
    "doctor_count": 0,
@@ -744,19 +835,7 @@
    "url": "http://www.daegumc.co.kr"
   },
   {
-   "run_id": 9,
-   "hospital_id": 245,
-   "ok": 0,
-   "doctor_count": 0,
-   "pages_ok": 0,
-   "pages_failed": 0,
-   "llm_calls": 0,
-   "error": "의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)",
-   "hospital_name": "대구파티마병원",
-   "url": "http://www.fatima.or.kr"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 11,
    "ok": 0,
    "doctor_count": 0,
@@ -768,7 +847,7 @@
    "url": "https://www.ddh.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 119,
    "ok": 0,
    "doctor_count": 0,
@@ -780,7 +859,7 @@
    "url": "http://www.gimhaehp.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 316,
    "ok": 0,
    "doctor_count": 0,
@@ -792,31 +871,19 @@
    "url": "http://www.ghgrandhospital.com"
   },
   {
-   "run_id": 9,
-   "hospital_id": 153,
-   "ok": 1,
-   "doctor_count": 79,
-   "pages_ok": 94,
-   "pages_failed": 0,
-   "llm_calls": 61,
-   "error": "의료진 수 급증(7→79): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)",
-   "hospital_name": "동국대학교의과대학경주병원",
-   "url": "http://www.dumc.or.kr/index01.jsp"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 12,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "동남권원자력의학원원자력병원",
    "url": "https://www.dirams.re.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 13,
    "ok": 0,
    "doctor_count": 0,
@@ -828,19 +895,19 @@
    "url": "http://www.drbs.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 256,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "동인외과병원",
    "url": "http://www.dongins.com/index/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 258,
    "ok": 0,
    "doctor_count": 0,
@@ -852,31 +919,31 @@
    "url": "http://www.leadersrehab.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 198,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 13,
    "pages_failed": 0,
-   "llm_calls": 13,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "메드윌병원",
    "url": "http://www.medwill.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 259,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "무지개아동병원",
    "url": "http://www.rainbow365.net"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 260,
    "ok": 0,
    "doctor_count": 0,
@@ -888,7 +955,7 @@
    "url": "http://www.munsung.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 200,
    "ok": 0,
    "doctor_count": 0,
@@ -900,7 +967,7 @@
    "url": "http://www.mrro.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 201,
    "ok": 0,
    "doctor_count": 0,
@@ -912,19 +979,7 @@
    "url": "http://www.miraehos.co.kr"
   },
   {
-   "run_id": 9,
-   "hospital_id": 261,
-   "ok": 1,
-   "doctor_count": 19,
-   "pages_ok": 5,
-   "pages_failed": 0,
-   "llm_calls": 5,
-   "error": "의료진 수 급증(6→19): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)",
-   "hospital_name": "미래여성병원",
-   "url": "http://www.miraemom.co.kr"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 102,
    "ok": 0,
    "doctor_count": 0,
@@ -936,7 +991,7 @@
    "url": "http://www.bdsh.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 322,
    "ok": 0,
    "doctor_count": 0,
@@ -948,7 +1003,7 @@
    "url": "http://www.bestrmhosp.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 37,
    "ok": 0,
    "doctor_count": 0,
@@ -960,7 +1015,7 @@
    "url": "http://www.boram-hospital.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 342,
    "ok": 0,
    "doctor_count": 0,
@@ -972,19 +1027,7 @@
    "url": "https://bhhospital.co.kr/"
   },
   {
-   "run_id": 9,
-   "hospital_id": 14,
-   "ok": 0,
-   "doctor_count": 0,
-   "pages_ok": 0,
-   "pages_failed": 0,
-   "llm_calls": 0,
-   "error": "의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)",
-   "hospital_name": "부산광역시의료원",
-   "url": "http://www.busanmc.or.kr"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 38,
    "ok": 0,
    "doctor_count": 0,
@@ -996,7 +1039,7 @@
    "url": "http://www.busangh.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 203,
    "ok": 0,
    "doctor_count": 0,
@@ -1008,31 +1051,7 @@
    "url": "https://minamhospital.com/"
   },
   {
-   "run_id": 9,
-   "hospital_id": 204,
-   "ok": 1,
-   "doctor_count": 9,
-   "pages_ok": 7,
-   "pages_failed": 0,
-   "llm_calls": 7,
-   "error": "의료진 수 급감(19→9): 페이지 구조 변경 여부 확인 필요 (변동 미집계)",
-   "hospital_name": "부산본병원",
-   "url": "http://www.bonhospital.co.kr/"
-  },
-  {
-   "run_id": 9,
-   "hospital_id": 15,
-   "ok": 0,
-   "doctor_count": 0,
-   "pages_ok": 0,
-   "pages_failed": 0,
-   "llm_calls": 0,
-   "error": "의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)",
-   "hospital_name": "부산성모병원(재단법인 천주교부산교구유지재단)",
-   "url": "http://bsm.or.kr"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 205,
    "ok": 0,
    "doctor_count": 0,
@@ -1044,7 +1063,7 @@
    "url": "http://www.sungmo.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 39,
    "ok": 0,
    "doctor_count": 0,
@@ -1056,7 +1075,7 @@
    "url": "http://www.busangh.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 263,
    "ok": 0,
    "doctor_count": 0,
@@ -1068,31 +1087,19 @@
    "url": "http://www.mastopia.com"
   },
   {
-   "run_id": 9,
-   "hospital_id": 207,
-   "ok": 1,
-   "doctor_count": 32,
-   "pages_ok": 11,
-   "pages_failed": 0,
-   "llm_calls": 11,
-   "error": "의료진 수 급증(1→16): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)",
-   "hospital_name": "사단법인 부산의료선교회 세계로병원",
-   "url": "http://www.sgrh.org/"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 40,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "사랑요양병원",
    "url": "http://www.sarangmedicare.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 18,
    "ok": 0,
    "doctor_count": 0,
@@ -1104,7 +1111,7 @@
    "url": "http://www.bah.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 306,
    "ok": 0,
    "doctor_count": 0,
@@ -1116,7 +1123,7 @@
    "url": "http://www.sangnocsu.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 171,
    "ok": 0,
    "doctor_count": 0,
@@ -1128,7 +1135,7 @@
    "url": "http://www.sjsh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 154,
    "ok": 0,
    "doctor_count": 0,
@@ -1140,7 +1147,7 @@
    "url": "http://sjrch.bz.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 343,
    "ok": 0,
    "doctor_count": 0,
@@ -1152,7 +1159,7 @@
    "url": "http://www.hang-mun.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 208,
    "ok": 0,
    "doctor_count": 0,
@@ -1164,19 +1171,19 @@
    "url": "http://anorectum.com/main/main.php"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 307,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 4,
    "pages_failed": 0,
-   "llm_calls": 4,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "새생명요양병원",
    "url": "http://www.새생명요양병원.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 209,
    "ok": 0,
    "doctor_count": 0,
@@ -1188,19 +1195,19 @@
    "url": "http://www.newoori.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 210,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 16,
    "pages_failed": 0,
-   "llm_calls": 16,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "새항운병원",
    "url": "http://www.saehangun.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 172,
    "ok": 0,
    "doctor_count": 0,
@@ -1212,7 +1219,7 @@
    "url": "https://seohospital.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 291,
    "ok": 0,
    "doctor_count": 0,
@@ -1224,19 +1231,19 @@
    "url": "http://eunyang.imc-boram.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 41,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 4,
    "pages_failed": 0,
-   "llm_calls": 3,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "서울우리요양병원",
    "url": "http://wooriyoyang.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 323,
    "ok": 0,
    "doctor_count": 0,
@@ -1248,7 +1255,7 @@
    "url": "http://ilovecnams.qrsvc.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 324,
    "ok": 0,
    "doctor_count": 0,
@@ -1260,7 +1267,7 @@
    "url": "http://www.ilovecna.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 264,
    "ok": 0,
    "doctor_count": 0,
@@ -1272,7 +1279,7 @@
    "url": "http://www.sshospital.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 265,
    "ok": 0,
    "doctor_count": 0,
@@ -1284,7 +1291,7 @@
    "url": "http://www.seminhosp.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 42,
    "ok": 0,
    "doctor_count": 0,
@@ -1296,7 +1303,7 @@
    "url": "http://centumhaein.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 266,
    "ok": 0,
    "doctor_count": 0,
@@ -1308,7 +1315,7 @@
    "url": "http://hanmih.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 213,
    "ok": 0,
    "doctor_count": 0,
@@ -1320,7 +1327,7 @@
    "url": "http://www.soon-soon.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 173,
    "ok": 0,
    "doctor_count": 0,
@@ -1332,7 +1339,7 @@
    "url": "http://mg.dhu.ac.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 121,
    "ok": 0,
    "doctor_count": 0,
@@ -1344,7 +1351,7 @@
    "url": "http://www.hyomind.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 44,
    "ok": 0,
    "doctor_count": 0,
@@ -1356,7 +1363,7 @@
    "url": "http://www.simdang.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 283,
    "ok": 0,
    "doctor_count": 0,
@@ -1368,19 +1375,19 @@
    "url": "http://www.arichae.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 156,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "안동성소병원",
    "url": "http://www.sungso.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 144,
    "ok": 0,
    "doctor_count": 0,
@@ -1392,19 +1399,7 @@
    "url": "http://www.how2care.co.kr/"
   },
   {
-   "run_id": 9,
-   "hospital_id": 98,
-   "ok": 0,
-   "doctor_count": 0,
-   "pages_ok": 0,
-   "pages_failed": 0,
-   "llm_calls": 0,
-   "error": "홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known",
-   "hospital_name": "양산부산대학교병원",
-   "url": "http://www.pnuyh.co.kr/content/"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 174,
    "ok": 0,
    "doctor_count": 0,
@@ -1416,7 +1411,7 @@
    "url": "http://www.gjfatima.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 296,
    "ok": 0,
    "doctor_count": 0,
@@ -1428,7 +1423,7 @@
    "url": "http://www.hmhospital.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 267,
    "ok": 0,
    "doctor_count": 0,
@@ -1440,7 +1435,7 @@
    "url": "http://www.md-park.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 344,
    "ok": 0,
    "doctor_count": 0,
@@ -1452,7 +1447,7 @@
    "url": "http://www.women-i.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 268,
    "ok": 0,
    "doctor_count": 0,
@@ -1464,19 +1459,19 @@
    "url": "http://www.bigos.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 240,
    "ok": 0,
    "doctor_count": 0,
-   "pages_ok": 0,
+   "pages_ok": 5,
    "pages_failed": 0,
-   "llm_calls": 0,
-   "error": "홈페이지 접속 실패: HTTP 404",
+   "llm_calls": 5,
+   "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "영남대학교병원",
-   "url": "http://www.yumc.ac.kr/00_main/main.htm"
+   "url": "https://www.yumc.ac.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 157,
    "ok": 0,
    "doctor_count": 0,
@@ -1488,7 +1483,7 @@
    "url": "http://yumc.ac.kr/yc/00_main/main.htm"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 19,
    "ok": 0,
    "doctor_count": 0,
@@ -1500,7 +1495,7 @@
    "url": "http://www.ydh.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 175,
    "ok": 0,
    "doctor_count": 0,
@@ -1512,7 +1507,7 @@
    "url": "http://www.yjctm.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 176,
    "ok": 0,
    "doctor_count": 0,
@@ -1524,7 +1519,7 @@
    "url": "http://www.영천요양병원.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 122,
    "ok": 0,
    "doctor_count": 0,
@@ -1536,19 +1531,7 @@
    "url": "http://www.hueh.co.kr"
   },
   {
-   "run_id": 9,
-   "hospital_id": 269,
-   "ok": 1,
-   "doctor_count": 11,
-   "pages_ok": 8,
-   "pages_failed": 0,
-   "llm_calls": 7,
-   "error": "의료진 수 급증(1→11): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)",
-   "hospital_name": "우리병원",
-   "url": "http://www.woorihospital.co.kr"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 297,
    "ok": 0,
    "doctor_count": 0,
@@ -1560,19 +1543,19 @@
    "url": "http://www.bestweare.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 298,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "울산미즈병원",
    "url": "http://www.ulsanmizhospital.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 292,
    "ok": 0,
    "doctor_count": 0,
@@ -1584,7 +1567,7 @@
    "url": "http://www.ush.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 345,
    "ok": 0,
    "doctor_count": 0,
@@ -1593,10 +1576,10 @@
    "llm_calls": 0,
    "error": "의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)",
    "hospital_name": "울진군의료원",
-   "url": "http://www.umc.or.kr/"
+   "url": "https://umc.or.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 216,
    "ok": 0,
    "doctor_count": 0,
@@ -1608,7 +1591,7 @@
    "url": "http://www.okmiso.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 45,
    "ok": 0,
    "doctor_count": 0,
@@ -1620,7 +1603,7 @@
    "url": "http://www.willishospital.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 123,
    "ok": 0,
    "doctor_count": 0,
@@ -1632,19 +1615,19 @@
    "url": "http://www.saeromhp.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 308,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 3,
    "pages_failed": 0,
-   "llm_calls": 2,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "의)우아의료재단 달동길메리요양병원",
    "url": "http://gilmary2.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 46,
    "ok": 0,
    "doctor_count": 0,
@@ -1656,19 +1639,19 @@
    "url": "http://www.aein.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 301,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "의)정우의료재단 더프라우병원",
    "url": "http://www.fraumedi.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 218,
    "ok": 0,
    "doctor_count": 0,
@@ -1680,7 +1663,7 @@
    "url": "http://happymc.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 219,
    "ok": 0,
    "doctor_count": 0,
@@ -1692,7 +1675,7 @@
    "url": "http://www.bigmind.co.kr/bigmind.php"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 124,
    "ok": 0,
    "doctor_count": 0,
@@ -1704,7 +1687,7 @@
    "url": "http://www.고성요양병원.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 20,
    "ok": 0,
    "doctor_count": 0,
@@ -1716,7 +1699,7 @@
    "url": "http://www.gwanghyehospital.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 47,
    "ok": 0,
    "doctor_count": 0,
@@ -1728,7 +1711,7 @@
    "url": "http://cityhospital.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 105,
    "ok": 0,
    "doctor_count": 0,
@@ -1740,7 +1723,7 @@
    "url": "http://www.dwho.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 125,
    "ok": 0,
    "doctor_count": 0,
@@ -1752,19 +1735,19 @@
    "url": "http://www.4000hanmaeum.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 293,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "의료법인 동강의료재단 동강병원",
    "url": "http://www.dkmc.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 48,
    "ok": 0,
    "doctor_count": 0,
@@ -1776,7 +1759,7 @@
    "url": "http://naranetwork.net"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 220,
    "ok": 0,
    "doctor_count": 0,
@@ -1788,7 +1771,7 @@
    "url": "http://www.sewoongh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 107,
    "ok": 0,
    "doctor_count": 0,
@@ -1800,7 +1783,7 @@
    "url": "http://www.clearwell.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 49,
    "ok": 0,
    "doctor_count": 0,
@@ -1812,7 +1795,7 @@
    "url": "http://www.champyonhan.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 302,
    "ok": 0,
    "doctor_count": 0,
@@ -1824,7 +1807,7 @@
    "url": "http://www.cityhospital.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 127,
    "ok": 0,
    "doctor_count": 0,
@@ -1836,7 +1819,7 @@
    "url": "http://www.gayacare.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 326,
    "ok": 0,
    "doctor_count": 0,
@@ -1848,7 +1831,7 @@
    "url": "http://www.ghsamsung.com/index.asp"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 128,
    "ok": 0,
    "doctor_count": 0,
@@ -1860,7 +1843,7 @@
    "url": "http://조은삼계.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 309,
    "ok": 0,
    "doctor_count": 0,
@@ -1872,7 +1855,7 @@
    "url": "http://bgilmary.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 221,
    "ok": 0,
    "doctor_count": 0,
@@ -1884,7 +1867,7 @@
    "url": "http://se-ha.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 50,
    "ok": 0,
    "doctor_count": 0,
@@ -1896,7 +1879,7 @@
    "url": "http://www.cham-love.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 22,
    "ok": 0,
    "doctor_count": 0,
@@ -1908,7 +1891,7 @@
    "url": "http://gang-an.or.kr/index.php"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 23,
    "ok": 0,
    "doctor_count": 0,
@@ -1920,7 +1903,7 @@
    "url": "http://www.samsun.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 129,
    "ok": 0,
    "doctor_count": 0,
@@ -1932,7 +1915,7 @@
    "url": "http://www.hyodo1004.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 222,
    "ok": 0,
    "doctor_count": 0,
@@ -1944,19 +1927,7 @@
    "url": "http://www.bumin.co.kr/gupo"
   },
   {
-   "run_id": 9,
-   "hospital_id": 24,
-   "ok": 1,
-   "doctor_count": 26,
-   "pages_ok": 7,
-   "pages_failed": 0,
-   "llm_calls": 7,
-   "error": "의료진 수 급증(15→26): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)",
-   "hospital_name": "의료법인 인당의료재단 부민병원",
-   "url": "http://www.bumin.co.kr/busan/"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 178,
    "ok": 0,
    "doctor_count": 0,
@@ -1968,7 +1939,7 @@
    "url": "http://www.yshosp.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 130,
    "ok": 0,
    "doctor_count": 0,
@@ -1980,7 +1951,7 @@
    "url": "http://www.samsunghospital.net"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 131,
    "ok": 0,
    "doctor_count": 0,
@@ -1992,7 +1963,7 @@
    "url": "https://pungsunghan.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 179,
    "ok": 0,
    "doctor_count": 0,
@@ -2004,19 +1975,19 @@
    "url": "http://www.asungh.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 132,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 0,
    "pages_failed": 0,
    "llm_calls": 0,
-   "error": "의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)",
+   "error": "홈페이지 접속 실패: robots.txt disallow",
    "hospital_name": "의료법인 행복한의료재단 숲속요양병원",
    "url": "https://www.happymc.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 284,
    "ok": 0,
    "doctor_count": 0,
@@ -2028,7 +1999,7 @@
    "url": "http://www.bighospital.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 285,
    "ok": 0,
    "doctor_count": 0,
@@ -2040,7 +2011,7 @@
    "url": "http://www.gcsh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 108,
    "ok": 0,
    "doctor_count": 0,
@@ -2052,7 +2023,7 @@
    "url": "http://www.kbhospital.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 52,
    "ok": 0,
    "doctor_count": 0,
@@ -2064,19 +2035,19 @@
    "url": "http://insarang.or.kr/gnuboard4/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 180,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "의료법인경북의료재단 경북요양병원",
    "url": "https://gbhospital.kr/new/index.php"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 223,
    "ok": 0,
    "doctor_count": 0,
@@ -2088,7 +2059,7 @@
    "url": "http://www.koreah.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 193,
    "ok": 0,
    "doctor_count": 0,
@@ -2100,7 +2071,7 @@
    "url": "http://www.simonmh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 246,
    "ok": 0,
    "doctor_count": 0,
@@ -2112,7 +2083,7 @@
    "url": "http://www.gooh.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 53,
    "ok": 0,
    "doctor_count": 0,
@@ -2124,7 +2095,7 @@
    "url": "http://jeil.naramef.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 348,
    "ok": 0,
    "doctor_count": 0,
@@ -2136,7 +2107,7 @@
    "url": "http://www.daenamhosp.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 159,
    "ok": 0,
    "doctor_count": 0,
@@ -2148,7 +2119,7 @@
    "url": "http://www.jeilh.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 181,
    "ok": 0,
    "doctor_count": 0,
@@ -2160,7 +2131,7 @@
    "url": "http://www.fatimabobath.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 182,
    "ok": 0,
    "doctor_count": 0,
@@ -2172,7 +2143,7 @@
    "url": "http://www.orchard21.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 160,
    "ok": 0,
    "doctor_count": 0,
@@ -2184,7 +2155,7 @@
    "url": "http://www.mgjh.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 272,
    "ok": 0,
    "doctor_count": 0,
@@ -2196,19 +2167,19 @@
    "url": "http://www.kidokh.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 183,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 0,
    "pages_failed": 0,
    "llm_calls": 0,
-   "error": "홈페이지 접속 실패: ConnectError: [Errno -3] Temporary failure in name resolution",
+   "error": "홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known",
    "hospital_name": "의료법인무일의료재단 참좋은요양병원",
    "url": "http://hosp.tvbuddha.org"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 54,
    "ok": 0,
    "doctor_count": 0,
@@ -2220,7 +2191,7 @@
    "url": "http://www.100sal.co.kr/main/main.htm"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 161,
    "ok": 0,
    "doctor_count": 0,
@@ -2232,19 +2203,7 @@
    "url": "http://www.ssmh.co.kr"
   },
   {
-   "run_id": 9,
-   "hospital_id": 349,
-   "ok": 1,
-   "doctor_count": 19,
-   "pages_ok": 3,
-   "pages_failed": 0,
-   "llm_calls": 3,
-   "error": "의료진 수 급증(1→19): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)",
-   "hospital_name": "의료법인삼정의료재단포항여성병원",
-   "url": "http://www.phw.co.kr"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 273,
    "ok": 0,
    "doctor_count": 0,
@@ -2256,19 +2215,19 @@
    "url": "http://www.dggshosp.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 109,
    "ok": 0,
    "doctor_count": 0,
-   "pages_ok": 12,
-   "pages_failed": 0,
-   "llm_calls": 12,
-   "error": "의료진 페이지에서 의사를 찾지 못함",
+   "pages_ok": 0,
+   "pages_failed": 5,
+   "llm_calls": 0,
+   "error": "의료진 페이지 수집 실패 (모든 페이지 오류)",
    "hospital_name": "의료법인석영의료재단창원제일종합병원",
    "url": "http://www.mjeilh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 55,
    "ok": 0,
    "doctor_count": 0,
@@ -2280,7 +2239,7 @@
    "url": "http://www.dongnaehanseo.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 194,
    "ok": 0,
    "doctor_count": 0,
@@ -2292,7 +2251,7 @@
    "url": "http://www.새빛병원.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 185,
    "ok": 0,
    "doctor_count": 0,
@@ -2304,7 +2263,7 @@
    "url": "http://성제요양병원.한국"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 225,
    "ok": 0,
    "doctor_count": 0,
@@ -2316,7 +2275,7 @@
    "url": "http://www.centumhospital.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 186,
    "ok": 0,
    "doctor_count": 0,
@@ -2328,7 +2287,7 @@
    "url": "http://www.ynsilver.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 134,
    "ok": 0,
    "doctor_count": 0,
@@ -2340,7 +2299,7 @@
    "url": "http://www.청솔요양병원.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 328,
    "ok": 0,
    "doctor_count": 0,
@@ -2352,7 +2311,7 @@
    "url": "http://www.3004sh.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 329,
    "ok": 0,
    "doctor_count": 0,
@@ -2364,19 +2323,7 @@
    "url": "http://www.seokyung.or.kr/"
   },
   {
-   "run_id": 9,
-   "hospital_id": 162,
-   "ok": 1,
-   "doctor_count": 128,
-   "pages_ok": 10,
-   "pages_failed": 1,
-   "llm_calls": 10,
-   "error": "의료진 수 급증(14→128): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)",
-   "hospital_name": "의료법인안동병원",
-   "url": "http://www.andonghospital.co.kr"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 56,
    "ok": 0,
    "doctor_count": 0,
@@ -2388,7 +2335,7 @@
    "url": "http://www.silverslife.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 57,
    "ok": 0,
    "doctor_count": 0,
@@ -2400,7 +2347,7 @@
    "url": "http://www.goodsarang.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 187,
    "ok": 0,
    "doctor_count": 0,
@@ -2412,7 +2359,7 @@
    "url": "http://www.gdrh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 70,
    "ok": 0,
    "doctor_count": 0,
@@ -2424,19 +2371,19 @@
    "url": "http://www.jmmh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 188,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 4,
    "pages_failed": 0,
-   "llm_calls": 4,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "의료법인재효의료재단의성요양병원",
    "url": "http://www.usgh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 59,
    "ok": 0,
    "doctor_count": 0,
@@ -2448,7 +2395,7 @@
    "url": "http://www.onefm.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 136,
    "ok": 0,
    "doctor_count": 0,
@@ -2460,19 +2407,19 @@
    "url": "http://www.jduhosp.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 286,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 4,
    "pages_failed": 0,
-   "llm_calls": 4,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "의료법인정목의료재단한패밀리요양병원",
    "url": "http://www.hanfamily.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 25,
    "ok": 0,
    "doctor_count": 0,
@@ -2484,7 +2431,7 @@
    "url": "http://www.bongseng.co.kr/index.asp"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 60,
    "ok": 0,
    "doctor_count": 0,
@@ -2496,7 +2443,7 @@
    "url": "http://ns.kjj9988.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 61,
    "ok": 0,
    "doctor_count": 0,
@@ -2508,7 +2455,7 @@
    "url": "http://www.smartbusan.co.kr/~hyosung/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 137,
    "ok": 0,
    "doctor_count": 0,
@@ -2520,19 +2467,19 @@
    "url": "http://gnsilver.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 350,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "의료법인청봉의료재단성누가병원",
    "url": "http://www.stluke.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 189,
    "ok": 0,
    "doctor_count": 0,
@@ -2544,7 +2491,7 @@
    "url": "http://www.phsongrahp.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 138,
    "ok": 0,
    "doctor_count": 0,
@@ -2556,7 +2503,7 @@
    "url": "http://keunsaranghospital.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 146,
    "ok": 0,
    "doctor_count": 0,
@@ -2568,7 +2515,7 @@
    "url": "http://tmh.kr/sub0/sub0.php?m=tyssh"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 139,
    "ok": 0,
    "doctor_count": 0,
@@ -2580,7 +2527,7 @@
    "url": "http://www.hmhansol.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 147,
    "ok": 0,
    "doctor_count": 0,
@@ -2592,7 +2539,7 @@
    "url": "http://www.hdsarang.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 330,
    "ok": 0,
    "doctor_count": 0,
@@ -2604,19 +2551,19 @@
    "url": "http://www.hanseo.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 163,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 45,
    "pages_failed": 0,
-   "llm_calls": 4,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "의료법인한성재단포항세명기독병원",
    "url": "http://www.phgidok.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 111,
    "ok": 0,
    "doctor_count": 0,
@@ -2628,7 +2575,7 @@
    "url": "http://www.mysh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 351,
    "ok": 0,
    "doctor_count": 0,
@@ -2640,7 +2587,7 @@
    "url": "http://pohang.wooridul.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 62,
    "ok": 0,
    "doctor_count": 0,
@@ -2652,7 +2599,7 @@
    "url": "http://www.bshd.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 190,
    "ok": 0,
    "doctor_count": 0,
@@ -2664,7 +2611,7 @@
    "url": "http://www.nnnara.com/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 112,
    "ok": 0,
    "doctor_count": 0,
@@ -2676,19 +2623,19 @@
    "url": "http://www.ggmc.or.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 64,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 2,
    "pages_failed": 0,
-   "llm_calls": 2,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "인제요양병원",
    "url": "http://www.injehosp.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 303,
    "ok": 0,
    "doctor_count": 0,
@@ -2700,7 +2647,7 @@
    "url": "http://www.jajae-hospital.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 227,
    "ok": 0,
    "doctor_count": 0,
@@ -2712,7 +2659,7 @@
    "url": "http://www.janglimhanseo.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 26,
    "ok": 0,
    "doctor_count": 0,
@@ -2724,7 +2671,7 @@
    "url": "http://www.ilsin.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 228,
    "ok": 0,
    "doctor_count": 0,
@@ -2736,31 +2683,19 @@
    "url": "http://www.jlasik.co.kr"
   },
   {
-   "run_id": 9,
-   "hospital_id": 276,
-   "ok": 1,
-   "doctor_count": 32,
-   "pages_ok": 10,
-   "pages_failed": 0,
-   "llm_calls": 10,
-   "error": "의료진 수 급증(4→16): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)",
-   "hospital_name": "제일안과병원",
-   "url": "http://eyehosp.co.kr/"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 28,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "좋은문화병원",
    "url": "http://www.moonhwa.or.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 287,
    "ok": 0,
    "doctor_count": 0,
@@ -2772,31 +2707,19 @@
    "url": "http://www.jahospital.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 334,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 21,
    "pages_failed": 0,
-   "llm_calls": 21,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "진주복음병원",
    "url": "http://jghospital.co.kr"
   },
   {
-   "run_id": 9,
-   "hospital_id": 335,
-   "ok": 1,
-   "doctor_count": 13,
-   "pages_ok": 7,
-   "pages_failed": 0,
-   "llm_calls": 7,
-   "error": "의료진 수 급증(2→13): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)",
-   "hospital_name": "진주세란병원",
-   "url": "http://www.jjseran.co.kr"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 115,
    "ok": 0,
    "doctor_count": 0,
@@ -2808,7 +2731,7 @@
    "url": "http://www.hanheart.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 278,
    "ok": 0,
    "doctor_count": 0,
@@ -2820,43 +2743,19 @@
    "url": "http://www.topspine.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 140,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "청담요양병원",
    "url": "http://www.cdhospital.co.kr/main/index.php"
   },
   {
-   "run_id": 9,
-   "hospital_id": 29,
-   "ok": 1,
-   "doctor_count": 26,
-   "pages_ok": 17,
-   "pages_failed": 0,
-   "llm_calls": 17,
-   "error": "의료진 수 급증(6→26): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)",
-   "hospital_name": "춘해보건대학교병원",
-   "url": "http://www.choonhae.or.kr/"
-  },
-  {
-   "run_id": 9,
-   "hospital_id": 241,
-   "ok": 0,
-   "doctor_count": 0,
-   "pages_ok": 1,
-   "pages_failed": 0,
-   "llm_calls": 1,
-   "error": "의료진 페이지에서 의사를 찾지 못함",
-   "hospital_name": "칠곡경북대학교병원",
-   "url": "http://www.knumc.org"
-  },
-  {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 191,
    "ok": 0,
    "doctor_count": 0,
@@ -2868,7 +2767,7 @@
    "url": "http://www.chilgok8899.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 165,
    "ok": 0,
    "doctor_count": 0,
@@ -2880,7 +2779,7 @@
    "url": "http://www.pohangsmh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 192,
    "ok": 0,
    "doctor_count": 0,
@@ -2892,19 +2791,19 @@
    "url": "http://www.peh.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 65,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 2,
    "pages_failed": 0,
-   "llm_calls": 2,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "푸른숲요양병원",
    "url": "http://purunhospi.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 141,
    "ok": 0,
    "doctor_count": 0,
@@ -2916,19 +2815,19 @@
    "url": "http://www.pureunhospital.com"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 290,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "학교법인 울산공업학원 울산대학교병원",
    "url": "https://www.uuh.ulsan.kr/main/main.asp"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 30,
    "ok": 0,
    "doctor_count": 0,
@@ -2940,7 +2839,7 @@
    "url": "http://www.demc.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 99,
    "ok": 0,
    "doctor_count": 0,
@@ -2949,10 +2848,10 @@
    "llm_calls": 0,
    "error": "홈페이지 접속 실패: ConnectTimeout: ",
    "hospital_name": "학교법인성균관대학삼성창원병원",
-   "url": "http://smc.skku.edu"
+   "url": "https://smc.skku.edu/smc/main/main.do?mId=1"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 247,
    "ok": 0,
    "doctor_count": 0,
@@ -2964,7 +2863,7 @@
    "url": "http://daegu.bohun.or.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 31,
    "ok": 0,
    "doctor_count": 0,
@@ -2976,7 +2875,7 @@
    "url": "https://busan.bohun.or.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 232,
    "ok": 0,
    "doctor_count": 0,
@@ -2988,7 +2887,7 @@
    "url": "https://www.han1004.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 148,
    "ok": 0,
    "doctor_count": 0,
@@ -3000,7 +2899,7 @@
    "url": "https://www.dreamforone.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 234,
    "ok": 0,
    "doctor_count": 0,
@@ -3012,7 +2911,7 @@
    "url": "https://snh.or.kr/main/main.php"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 289,
    "ok": 0,
    "doctor_count": 0,
@@ -3024,31 +2923,31 @@
    "url": "http://cafe.daum.net/hanguk100s"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 142,
    "ok": 0,
    "doctor_count": 0,
-   "pages_ok": 0,
+   "pages_ok": 12,
    "pages_failed": 0,
-   "llm_calls": 0,
-   "error": "의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)",
+   "llm_calls": 12,
+   "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "행복한요양병원",
    "url": "http://www.happy2008.co.kr"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 67,
    "ok": 0,
    "doctor_count": 0,
    "pages_ok": 1,
    "pages_failed": 0,
-   "llm_calls": 1,
+   "llm_calls": 0,
    "error": "의료진 페이지에서 의사를 찾지 못함",
    "hospital_name": "현대요양병원",
    "url": "http://www.hdcare.co.kr/"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 337,
    "ok": 0,
    "doctor_count": 0,
@@ -3060,7 +2959,7 @@
    "url": "http://www.pulip.org/hospital/hospital_info_01.htm"
   },
   {
-   "run_id": 9,
+   "run_id": 10,
    "hospital_id": 68,
    "ok": 0,
    "doctor_count": 0,
@@ -3070,18 +2969,6 @@
    "error": "홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known",
    "hospital_name": "효메디요양병원",
    "url": "http://www.hyomedi.co.kr/"
-  },
-  {
-   "run_id": 9,
-   "hospital_id": 143,
-   "ok": 1,
-   "doctor_count": 20,
-   "pages_ok": 8,
-   "pages_failed": 0,
-   "llm_calls": 8,
-   "error": "의료진 수 급증(2→20): 수집 범위 확대로 보고 기준선 재설정 (변동 미집계)",
-   "hospital_name": "희연요양병원",
-   "url": "http://silver4u.net"
   }
  ]
 }
