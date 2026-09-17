@@ -8,8 +8,8 @@ PNUH = {"addr": "부산광역시 서구 구덕로 179", "clCd": "01", "clCdNm": 
         "sgguCd": 210006, "sgguCdNm": "부산서구", "telno": "240-7000", "yadmNm": "부산대학교병원", "ykiho": "JDQ4MTAx"}
 YANGSAN = {"addr": "경상남도 양산시", "clCd": "01", "clCdNm": "상급종합", "drTotCnt": 470, "sidoCd": 380000, "sidoCdNm": "경남",
            "hospUrl": "http://www.pnuyh.co.kr/content/", "yadmNm": "양산부산대학교병원", "ykiho": "JDQ4MTVy"}
-BSM = {"clCd": "05", "clCdNm": "종합병원", "drTotCnt": 120, "sidoCd": 210000, "sidoCdNm": "부산", "hospUrl": "www.bsm.or.kr", "yadmNm": "부산성모병원", "ykiho": "JDQ4MTBz"}
-CLINIC = {"clCd": "21", "clCdNm": "의원", "drTotCnt": 1, "sidoCd": 210000, "sidoCdNm": "부산", "yadmNm": "동네의원", "ykiho": "JDQ4MTCc"}
+BSM = {"clCd": "11", "clCdNm": "종합병원", "drTotCnt": 120, "sidoCd": 210000, "sidoCdNm": "부산", "hospUrl": "www.bsm.or.kr", "yadmNm": "부산성모병원", "ykiho": "JDQ4MTBz"}
+CLINIC = {"clCd": "31", "clCdNm": "의원", "drTotCnt": 1, "sidoCd": 210000, "sidoCdNm": "부산", "yadmNm": "동네의원", "ykiho": "JDQ4MTCc"}
 
 
 def _payload(items, total):
@@ -73,3 +73,18 @@ def test_csv_row_merges_with_hira_row(tmp_path):
         D.upsert_hospital(conn, {"name": "양산부산대학교병원", "url": "https://www.pnuyh.or.kr", "sido": "경남"})
         assert conn.execute("SELECT COUNT(*) FROM hospitals").fetchone()[0] == 2
         assert conn.execute("SELECT url FROM hospitals WHERE name='양산부산대학교병원'").fetchone()[0] == "https://www.pnuyh.or.kr"
+
+
+def test_unknown_sido_raises():
+    import pytest
+
+    with pytest.raises(hira.HiraError):
+        list(hira.iter_hospitals(sido="화성", service_key="k"))
+
+
+def test_csv_does_not_override_hira_classification(tmp_path):
+    with D.session(tmp_path / "t.db") as conn:
+        D.upsert_hospital(conn, hira.normalize_row(dict(PNUH, clCd="01", clCdNm="상급종합")))
+        D.upsert_hospital(conn, {"name": "부산대학교병원", "url": "https://www.pnuh.or.kr", "sido": "부산", "cl_name": "종합병원"})
+        row = conn.execute("SELECT cl_name, url FROM hospitals WHERE name='부산대학교병원'").fetchone()
+        assert row["cl_name"] == "상급종합" and row["url"] == "https://www.pnuh.or.kr"

@@ -93,6 +93,16 @@ def cmd_set_staff_urls(a: argparse.Namespace) -> None:
     print("저장됨")
 
 
+def cmd_deactivate(a: argparse.Namespace) -> None:
+    """시도 또는 병원 id 로 수집 대상에서 제외/복귀."""
+    with D.session() as conn:
+        if a.sido:
+            n = conn.execute("UPDATE hospitals SET active=? WHERE sido=?", (0 if not a.undo else 1, a.sido)).rowcount
+        else:
+            n = conn.execute("UPDATE hospitals SET active=? WHERE id=?", (0 if not a.undo else 1, a.hospital_id)).rowcount
+    print(f"{n}곳 {'복귀' if a.undo else '제외'}")
+
+
 def cmd_set_ignore_robots(a: argparse.Namespace) -> None:
     with D.session() as conn:
         conn.execute("UPDATE hospitals SET ignore_robots=? WHERE id=?", (0 if a.off else 1, a.hospital_id))
@@ -245,6 +255,12 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("hospital_id", type=int)
     s.add_argument("urls", nargs="+")
     s.set_defaults(fn=cmd_set_staff_urls)
+
+    s = sub.add_parser("deactivate", help="시도/병원을 수집 대상에서 제외 (--undo 로 복귀)")
+    s.add_argument("--sido")
+    s.add_argument("--hospital-id", type=int)
+    s.add_argument("--undo", action="store_true")
+    s.set_defaults(fn=cmd_deactivate)
 
     s = sub.add_parser("set-ignore-robots", help="병원별 robots.txt 무시 설정 (공개 의료진 페이지를 저빈도로 읽는 용도)")
     s.add_argument("hospital_id", type=int)
