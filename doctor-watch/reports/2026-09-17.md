@@ -1,14 +1,273 @@
 # 의료진 변동 주간 브리핑 — 2026-09-17 (2026-W38)
 
-- 수집 병원: 11곳 (성공 10, 실패 1)
-- 확인된 의사: 886명
-- 변동: 0건 · 이직 추정 0건 · 고객 명단 해당 0건
+- 수집 병원: 325곳 (성공 91, 실패 234)
+- 확인된 의사: 1746명
+- 변동: 21건 · 이직 추정 0건 · 고객 명단 해당 0건
 
 ## 병원별 변동
 
-이번 주 변동 없음.
+### 부산대학교병원 (19건)
+
+- **진료과 변경** 조원호 · 뇌종양외과 · 교수 (이전: 신경외과)
+- **진료과 변경** 차승헌 · 뇌종양외과 · 교수 (이전: 신경외과)
+- **진료과 변경** 고준경 · 뇌혈관외과 · 교수 (이전: 신경외과)
+- **진료과 변경** 김동환 · 뇌혈관외과 · 교수 (이전: 신경외과)
+- **진료과 변경** 김병철 · 뇌혈관외과 · 교수 (이전: 신경외과)
+- **진료과 변경** 유승한 · 뇌혈관외과 · 교수 (이전: 신경외과)
+- **진료과 변경** 이재민 · 뇌혈관외과 · 교수 (이전: 신경외과)
+- **진료과 변경** 이재일 · 뇌혈관외과 · 교수 (이전: 신경외과)
+- **진료과 변경** 최병관 · 뇌혈관외과 · 교수 (이전: 신경외과)
+- **진료과 변경** 최혁진 · 뇌혈관외과 · 교수 (이전: 신경외과)
+- **진료과 변경** 한인호 · 뇌혈관외과 · 교수 (이전: 신경외과)
+- **진료과 변경** 안태영 · 소아청소년정형외과 · 조교수 (이전: 정형외과)
+- **진료과 변경** 이상현 · 수부외과 · 교수 (이전: 정형외과)
+- **진료과 변경** 이승준 · 슬관절외과 · 조교수 (이전: 정형외과)
+- **진료과 변경** 고태식 · 족관절외과 · 조교수 (이전: 정형외과)
+- **진료과 변경** 김영대 · 혈관외과 · 교수 (이전: 심장혈관흉부외과)
+- **진료과 변경** 이호석 · 혈관외과 · 교수 (이전: 심장혈관흉부외과)
+- **진료과 변경** 정성운 · 혈관외과 · 교수 (이전: 심장혈관흉부외과)
+- **진료과 변경** 조정수 · 혈관외과 · 교수 (이전: 심장혈관흉부외과)
+
+### 동아대학교병원 (2건)
+
+- **진료과 변경** 박은화 · 이식혈관외과 · 교수 (이전: 외과)
+- **진료과 변경** 차윤정 · 이식혈관외과 · 교수 (이전: 외과)
+
 ## ⚠️ 수집 실패 / 검토 필요
 
+- (의) 내경의료재단 울산제일병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- (의)서봉의료재단 보강병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- (의)인석의료재단 보람병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- (의)환명의료재단 경상남도립김해노인전문병원: 홈페이지 접속 실패: HTTP 403
+- 365병원: 홈페이지 접속 실패: robots.txt disallow
+- MS재건병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- the큰병원: 의료진 페이지 수집 실패 (모든 페이지 오류)
+- 개나리소아청소년과병원: 의료진 페이지에서 의사를 찾지 못함
+- 거창적십자병원: 홈페이지 접속 실패: HTTP 404
+- 경북대학교병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 경상국립대학교병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 경상남도립양산노인전문병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 경상남도마산의료원: 홈페이지 접속 실패: ConnectTimeout: 
+- 경상북도김천의료원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 경상북도립김천노인전문요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 경상북도립안동노인전문요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 경상북도안동의료원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 경상북도포항의료원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 경주시립노인전문요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 계명대학교 경주동산병원: 홈페이지 접속 실패: HTTP 403
+- 계명대학교동산병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 고려요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 고신대학교복음병원: 의료진 페이지 수집 실패 (모든 페이지 오류)
+- 곽병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 관문병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 광개토병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 광안정다운요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 구미시립노인요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 국립마산병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 근로복지공단 대구병원: 홈페이지 접속 실패: HTTP 400
+- 근로복지공단 창원병원: 홈페이지 접속 실패: HTTP 400
+- 금정형주요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 김해사랑병원: 홈페이지 접속 실패: HTTP 403
+- 남산정요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 녹십자요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 다사랑요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 달성요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 대구광역시시지노인전문병원: 홈페이지 접속 실패: robots.txt disallow
+- 대구보건대학교병원: 의료진 페이지에서 의사를 찾지 못함
+- 대구예스병원: 홈페이지 접속 실패: HTTP 406
+- 대구의료원: 홈페이지 접속 실패: ConnectTimeout: 
+- 대구파티마병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
 - 대동병원: 홈페이지 접속 실패: HTTP 403
+- 대민의료생활협동조합 온세상요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 더(the)큰병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 동남권원자력의학원원자력병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 동래봉생병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 동인외과병원: 의료진 페이지에서 의사를 찾지 못함
+- 리더스재활의학병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 메드윌병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 무지개아동병원: 의료진 페이지에서 의사를 찾지 못함
+- 문성병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 미래로병원: 홈페이지 접속 실패: ConnectError: [Errno -3] Temporary failure in name resolution
+- 미래병원: 홈페이지 접속 실패: HTTP 403
+- 베데스다복음병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 베스트재활의학과병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 보람요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 봉화해성병원: 홈페이지 접속 실패: robots.txt disallow
+- 부산광역시의료원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 부산노인전문제3병원: 의료진 페이지 수집 실패 (모든 페이지 오류)
+- 부산미남병원: 홈페이지 접속 실패: HTTP 403
+- 부산성모병원(재단법인 천주교부산교구유지재단): 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 부산성모안과병원: 의료진 페이지에서 의사를 찾지 못함
+- 부산시노인전문제1병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 분홍빛으로병원: 홈페이지 접속 실패: HTTP 403
+- 사랑요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 삼육부산병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 상록수요양병원: 홈페이지 접속 실패: HTTP 403
+- 상주시립요양병원: 홈페이지 접속 실패: robots.txt disallow
+- 상주적십자병원: 홈페이지 접속 실패: robots.txt disallow
+- 상쾌한 항구병원: 홈페이지 접속 실패: HTTP 403
+- 상쾌한병원: 홈페이지 접속 실패: ConnectError: [Errno -3] Temporary failure in name resolution
+- 새생명요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 새우리병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 서요양병원: 홈페이지 접속 실패: robots.txt disallow
+- 서울산보람병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 서울우리요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 서울패미리병원: 의료진 페이지에서 의사를 찾지 못함
+- 서울패밀리병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 성서병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 세민병원: 의료진 페이지에서 의사를 찾지 못함
+- 센텀해인요양병원: 홈페이지 접속 실패: HTTP 406
+- 수성한미병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 순병원: 홈페이지 접속 실패: ConnectError: [Errno -3] Temporary failure in name resolution
+- 순천향대학교 부속 구미병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 시립문경요양병원: 홈페이지 접속 실패: HTTP 500
+- 시립창원요양병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 심당요양병원: 홈페이지 접속 실패: ConnectError: [Errno -3] Temporary failure in name resolution
+- 아리채요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 양산병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 양산부산대학교병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 에스요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 에이치엠병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 여성메디파크병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 여성아이병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 열린큰병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 영남대학교병원: 홈페이지 접속 실패: HTTP 404
+- 영남대학교의과대학부속영천병원: 홈페이지 접속 실패: HTTP 404
+- 영도병원: 의료진 페이지에서 의사를 찾지 못함
+- 영주시립노인전문요양병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 영천요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 용원휴요양병원: 홈페이지 접속 실패: robots.txt disallow
+- 울들병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 울산미즈병원: 의료진 페이지에서 의사를 찾지 못함
+- 울산병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 울산이손병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 울진군의료원: 홈페이지 접속 실패: ConnectTimeout: 
+- 웰하이여성아동병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 윌리스요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 유천의료재단새롬재활요양병원: 홈페이지 접속 실패: ConnectError: [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1010)
+- 의)우아의료재단 달동길메리요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의)은성의료재단 좋은애인요양병원: 홈페이지 접속 실패: HTTP 403
+- 의)정우의료재단 더프라우병원: 의료진 페이지에서 의사를 찾지 못함
+- 의)청십자의료재단 행복한병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인 갑을의료재단 갑을녹산병원: 홈페이지 접속 실패: robots.txt disallow
+- 의료법인 경림의료재단 고성요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인 경진의료재단 경희요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인 광혜의료재단 광혜병원: 홈페이지 접속 실패: ConnectError: [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1010)
+- 의료법인 다정의료재단 금산요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인 대우의료재단대우병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인 덕산의료재단 한마음노인요양병원: 홈페이지 접속 실패: robots.txt disallow
+- 의료법인 동일의료재단 금정나라요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인 라움의료재단 세웅병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인 백천의료재단 바로본병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 의료법인 서명의료재단 세명종합병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인 성념의료재단맑은샘병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인 성원의료재단 감천참편한요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인 송은의료재단 울산시티2병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인 송파의료재단 가야요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인 신의료재단 김해삼승병원: 홈페이지 접속 실패: HTTP 403
+- 의료법인 오남의료재단 인제요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인 온그룹의료재단 온병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인 우아의료재단 길메리요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인 은빛의료재단 세하병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인 은빛의료재단 참사랑요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인 은성의료재단 좋은강안병원: 홈페이지 접속 실패: HTTP 404
+- 의료법인 은성의료재단 좋은삼선병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인 인경의료재단 홍익요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인 인당의료재단 구포부민병원: 홈페이지 접속 실패: HTTP 404
+- 의료법인 정암의료재단 윤성요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인 진주의료재단 진주노인요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인 풍성의료재단 안정요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인 한백의료재단 구미아성요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인 행복한의료재단 숲속요양병원: 홈페이지 접속 실패: robots.txt disallow
+- 의료법인 효민의료재단 대구큰사랑요양병원: 홈페이지 접속 실패: HTTP 403
+- 의료법인가창삼성의료재단 가창삼성요양병원: 홈페이지 접속 실패: HTTP 403
+- 의료법인갑을의료재단 갑을장유병원: 홈페이지 접속 실패: robots.txt disallow
+- 의료법인강혜의료재단남천사랑의요양병원: 홈페이지 접속 실패: HTTP 404
+- 의료법인경동의료재단효성병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 의료법인경북의료재단 경북요양병원: 홈페이지 접속 실패: HTTP 200
+- 의료법인고려의료재단부산고려병원: 홈페이지 접속 실패: robots.txt disallow
+- 의료법인고산의료재단칠곡시몬병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인구의료재단 구병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인나라의료재단 부산나라요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인대남의료재단청도대남병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 의료법인덕산의료재단김천제일병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인동오의료재단 도움요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인동제의료재단 오차드요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인동춘의료재단문경제일병원: 홈페이지 접속 실패: HTTP 403
+- 의료법인명문의료재단 대구기독병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인무일의료재단 참좋은요양병원: 홈페이지 접속 실패: ConnectError: [Errno -3] Temporary failure in name resolution
+- 의료법인백세의료재단백세요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인삼백의료재단상주성모병원: 홈페이지 접속 실패: robots.txt disallow
+- 의료법인상보의료재단 대구경상병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 의료법인생명샘의료재단 로뎀요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인석영의료재단창원제일종합병원: 홈페이지 접속 실패: HTTP 403
+- 의료법인선우의료재단  BHS동래한서요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인성산의료재단새빛병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인성제의료재단 성제요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인센텀의료재단 서부산센텀병원: 홈페이지 접속 실패: robots.txt disallow
+- 의료법인수성의료재단영남요양병원: 홈페이지 접속 실패: HTTP 403
+- 의료법인수의료재단 청솔요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인승연의료재단 삼천포서울병원: 홈페이지 접속 실패: HTTP 403
+- 의료법인아림의료재단에스지서경병원: 홈페이지 접속 실패: HTTP 400
+- 의료법인양경의료재단 중앙U병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인은경의료재단 인창요양병원: 홈페이지 접속 실패: HTTP 403
+- 의료법인은성의료재단 좋은사랑요양병원: 홈페이지 접속 실패: HTTP 403
+- 의료법인인덕의료재단 경도요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인인본의료재단해운대자명병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인재효의료재단의성요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인전일의료재단한가족요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인정다운사람들의료재단정다운요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인정목의료재단한패밀리요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인정화의료재단 봉생기념병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인좋은사람들의료재단 관자재요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인지석의료재단 효성프라임요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인진주의료재단 경상남도립통영노인전문병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인청봉의료재단성누가병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인청암의료재단 포항송라요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인태산의료재단 큰사랑요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인통영의료재단통영정신병원: 홈페이지 접속 실패: HTTP 404
+- 의료법인푸른솔의료재단 김해한솔재활요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인한길사랑의료재단현대사랑병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인한서의료재단 진영병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인한성재단포항세명기독병원: 의료진 페이지에서 의사를 찾지 못함
+- 의료법인합포의료재단에스엠지연세병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인현암의료재단 포항우리병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인호산나의료재단현대요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 의료법인화암의료재단 간호나라요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 의료법인환명의료재단 조은금강병원: 홈페이지 접속 실패: HTTP 403
+- 인제요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 인제재활병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 자재병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 장림한서병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 재단법인일신기독교선교회 일신기독병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 정근안과병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 좋은문화병원: 의료진 페이지에서 의사를 찾지 못함
+- 중앙요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
+- 창원파티마병원: 홈페이지 접속 실패: ConnectError: [Errno -3] Temporary failure in name resolution
+- 창원한마음병원: 홈페이지 접속 실패: HTTP 403
+- 척탑병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 청담요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 칠곡경북대학교병원: 의료진 페이지에서 의사를 찾지 못함
+- 칠곡군립노인요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 통영적십자병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 파란시티병원: 의료진 페이지에서 의사를 찾지 못함
+- 포항성모병원: 의료진 페이지에서 의사를 찾지 못함
+- 포항이요양병원: 홈페이지 접속 실패: robots.txt disallow
+- 푸른숲요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 푸른요양병원: 홈페이지 접속 실패: ConnectError: [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1010)
+- 하나병원: 홈페이지 접속 실패: ConnectError: [Errno -3] Temporary failure in name resolution
+- 학교법인 울산공업학원 울산대학교병원: 홈페이지 접속 실패: RemoteProtocolError: Server disconnected without sending a response.
+- 학교법인)동의병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 학교법인성균관대학삼성창원병원: 홈페이지 접속 실패: ConnectTimeout: 
+- 한국보훈복지의료공단 대구보훈병원: 의료진 페이지 수집 실패 (모든 페이지 오류)
+- 한국보훈복지의료공단 부산보훈병원: 홈페이지 접속 실패: HTTP 403
+- 한마음병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 한사랑병원: 홈페이지 접속 실패: HTTP 403
+- 해운대나눔과행복병원: 홈페이지 접속 실패: HTTP 403
+- 햇살요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 행복한요양병원: 의료진 페이지를 찾지 못함 (staff_urls 수동 지정 필요)
+- 현대요양병원: 의료진 페이지에서 의사를 찾지 못함
+- 홍익재활병원: 홈페이지 접속 실패: HTTP 404
+- 효메디요양병원: 홈페이지 접속 실패: ConnectError: [Errno -2] Name or service not known
 
-_생성: 2026-09-17 01:27 · doctor-watch_
+_생성: 2026-09-17 05:20 · doctor-watch_
