@@ -115,6 +115,23 @@ CREATE TABLE IF NOT EXISTS changes (
 CREATE INDEX IF NOT EXISTS idx_changes_run ON changes(run_id);
 CREATE INDEX IF NOT EXISTS idx_changes_name ON changes(name_key);
 
+-- 병원별 의사 상태 (2회 연속 확인 시 합류, 2회 연속 부재 시 제외로 확정하는 히스테리시스)
+CREATE TABLE IF NOT EXISTS doctor_state (
+    hospital_id  INTEGER NOT NULL REFERENCES hospitals(id),
+    name_key     TEXT NOT NULL,
+    name         TEXT NOT NULL,
+    department   TEXT,
+    position     TEXT,
+    source_url   TEXT,
+    status       TEXT NOT NULL,        -- pending | present | absent
+    hit_count    INTEGER NOT NULL DEFAULT 0,
+    miss_count   INTEGER NOT NULL DEFAULT 0,
+    first_seen_run INTEGER,
+    last_seen_run  INTEGER,
+    updated_run    INTEGER,
+    PRIMARY KEY (hospital_id, name_key)
+);
+
 -- 고객(관심) 의사 명단
 CREATE TABLE IF NOT EXISTS watchlist (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,

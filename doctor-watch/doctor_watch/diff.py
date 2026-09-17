@@ -163,3 +163,101 @@ def mark_watchlist_hits(conn: sqlite3.Connection, run_id: int) -> int:
             conn.execute("UPDATE changes SET watchlist_id=? WHERE id=?", (best[1]["id"], ch["id"]))
             hits += 1
     return hits
+
+
+CONFIRM_RUNS = 2  # 연속 N회 확인/부재 시 확정
+
+
+def _dept_union(rows: list[dict[str, Any]]) -> str | None:
+    seen: list[str] = []
+    for r in rows:
+        d = r.get("department")
+        if d and d not in seen:
+            seen.append(d)
+    return " / ".join(seen) or None
+
+
+def apply_snapshot(
+    conn: sqlite3.Connection,
+    run_id: int,
+    hospital_id: int,
+    cur_rows: list,
+    cur_ok_urls: set[str],
+    baseline: bool = False,
+) -> list[dict[str, Any]]:
+    """이번 실행의 명단을 상태표에 반영하고 확정된 변동만 돌려준다.
+
+    - 새 이름: pending → 다음 성공 실행에서도 보이면 present 확정 + joined
+    - 사라진 이름: miss_count 증가 → CONFIRM_RUNS 회 연속 부재 시 absent + left
+      (그 사람이 실렸던 페이지를 이번에 못 읽었다면 부재로 세지 않는다)
+    - 무작위로 내용이 바뀌는 페이지(예: '오늘의 의료진')에 잠깐 실린 이름은 pending 에서 사라져 잡음이 되지 않는다.
+    - baseline=True(병원의 첫 스냅샷)면 모두 present 로 등록하고 변동은 내지 않는다.
+    """
+    cur = _index([dict(r) for r in cur_rows])
+    states = {r["name_key"]: dict(r) for r in conn.execute("SELECT * FROM doctor_state WHERE hospital_id=?", (hospital_id,))}
+    changes: list[dict[str, Any]] = []
+
+    def upsert(key: str, **f: Any) -> None:
+        if key in states:
+            conn.execute(
+                f"UPDATE doctor_state SET {', '.join(f'{c}=?' for c in f)} WHERE hospital_id=? AND name_key=?",
+                list(f.values()) + [hospital_id, key],
+            )
+        else:
+            cols = ["hospital_id", "name_key"] + list(f.keys())
+            conn.execute(
+                f"INSERT INTO doctor_state ({', '.join(cols)}) VALUES ({', '.join('?' for _ in cols)})",
+                [hospital_id, key] + list(f.values()),
+            )
+            states[key] = {"status": f.get("status", "pending"), **f}
+
+    for key, rows in cur.items():
+        rep = rows[0]
+        dept, pos = _dept_union(rows), rep.get("position")
+        st = states.get(key)
+        if baseline or (st is None and not states):
+            upsert(key, name=rep["name"], department=dept, position=pos, source_url=rep.get("source_url"), status="present",
+                   hit_count=CONFIRM_RUNS, miss_count=0, first_seen_run=run_id, last_seen_run=run_id, updated_run=run_id)
+            continue
+        if st is None or st["status"] == "absent":
+            upsert(key, name=rep["name"], department=dept, position=pos, source_url=rep.get("source_url"), status="pending",
+                   hit_count=1, miss_count=0, first_seen_run=run_id, last_seen_run=run_id, updated_run=run_id)
+            continue
+        if st["status"] == "pending":
+            hits = st["hit_count"] + 1
+            if hits >= CONFIRM_RUNS:
+                upsert(key, name=rep["name"], department=dept, position=pos, source_url=rep.get("source_url"), status="present",
+                       hit_count=hits, miss_count=0, last_seen_run=run_id, updated_run=run_id)
+                changes.append({"kind": "joined", "name": rep["name"], "name_key": key, "department": dept, "position": pos})
+            else:
+                upsert(key, hit_count=hits, last_seen_run=run_id, updated_run=run_id, department=dept, position=pos, source_url=rep.get("source_url"))
+            continue
+        # present: 진료과/직위 변화 확인
+        prev_d = {x.strip() for x in (st["department"] or "").split("/") if x.strip()}
+        cur_d = {x.strip() for x in (dept or "").split("/") if x.strip()}
+        if prev_d and cur_d and not (prev_d & cur_d):
+            changes.append({"kind": "dept_changed", "name": rep["name"], "name_key": key, "department": dept, "position": pos,
+                            "prev_department": st["department"], "prev_position": st["position"]})
+        elif st["position"] and pos and st["position"] != pos and len({r.get("position") for r in rows if r.get("position")}) == 1:
+            changes.append({"kind": "position_changed", "name": rep["name"], "name_key": key, "department": dept, "position": pos,
+                            "prev_department": st["department"], "prev_position": st["position"]})
+        upsert(key, name=rep["name"], department=dept, position=pos, source_url=rep.get("source_url"), miss_count=0, last_seen_run=run_id, updated_run=run_id)
+
+    # 이번에 안 보인 사람들
+    for key, st in states.items():
+        if key in cur:
+            continue
+        if st["status"] == "pending":
+            conn.execute("DELETE FROM doctor_state WHERE hospital_id=? AND name_key=?", (hospital_id, key))
+            continue
+        if st["status"] != "present":
+            continue
+        if st.get("source_url") and cur_ok_urls and st["source_url"] not in cur_ok_urls:
+            continue  # 그 페이지를 이번에 못 읽었으면 판단 보류
+        misses = st["miss_count"] + 1
+        if misses >= CONFIRM_RUNS:
+            upsert(key, status="absent", miss_count=0, hit_count=0, updated_run=run_id)
+            changes.append({"kind": "left", "name": st["name"], "name_key": key, "department": st["department"], "position": st["position"]})
+        else:
+            upsert(key, miss_count=misses, updated_run=run_id)
+    return changes

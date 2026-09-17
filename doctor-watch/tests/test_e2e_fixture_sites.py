@@ -85,23 +85,37 @@ def test_two_week_cycle(env, server):
         assert st["ok"] == 2 and st["failed"] == 1, st  # 해운병원은 사이트 다운
         b = load_briefing(conn, run2)
         kinds = {(c["hospital_name"], c["kind"], c["name"]) for c in b["changes"]}
-        assert ("하나종합병원", "left", "이영희") in kinds
-        assert ("하나종합병원", "joined", "강다혜") in kinds
-        assert ("하나종합병원", "position_changed", "박준호") in kinds
-        assert ("부산중앙병원", "joined", "이영희") in kinds
-        # 사이트가 죽은 병원은 '제외' 오탐이 없어야 한다
+        # 직위 변경은 즉시, 합류/제외는 2회 연속 확인 후 확정 → 2주차에는 아직 잡히지 않는다
+        assert kinds == {("하나종합병원", "position_changed", "박준호")}, kinds
         assert not any(h == "해운병원" for h, _, _ in kinds)
+        pend = conn.execute("SELECT name, status, miss_count FROM doctor_state WHERE name IN ('이영희','강다혜') ORDER BY name, hospital_id").fetchall()
+        assert {(r["name"], r["status"]) for r in pend} == {("강다혜", "pending"), ("이영희", "present"), ("이영희", "pending")}
+        # 변경 없는 페이지는 캐시로 재추출 생략
+        cached = conn.execute("SELECT COUNT(*) FROM pages WHERE run_id=? AND extracted_by='cache'", (run2,)).fetchone()[0]
+        assert cached >= 1
+
+
+def test_third_week_confirms_changes_and_links_move(env, server):
+    """3주차(내용 동일): 하나종합병원 이영희 제외·강다혜 합류 확정, 부산중앙병원 이영희 합류 확정 → 이직 연결·고객명단 표시."""
+    from doctor_watch import db as D
+    from doctor_watch.pipeline import run_collection
+    from doctor_watch.report import load_briefing, markdown_report, summary_text, write_reports
+
+    _Switchable.root = FIX / "week3"
+    run3 = asyncio.run(run_collection(prefer_llm=False, concurrency=4))
+    with D.session() as conn:
+        b = load_briefing(conn, run3)
+        kinds = {(c["hospital_name"], c["kind"], c["name"]) for c in b["changes"]}
+        assert kinds == {("하나종합병원", "left", "이영희"), ("하나종합병원", "joined", "강다혜"), ("부산중앙병원", "joined", "이영희")}, kinds
+        assert {f["hospital_name"] for f in b["failed"]} == {"해운병원"}
         # 이직 연결
         assert len(b["moves"]) == 1 and b["moves"][0]["related_hospital_name"] == "부산중앙병원"
         # 관심 명단 대조 (하나종합병원 제외 + 부산중앙병원 합류 모두 표시)
         assert {c["hospital_name"] for c in b["watch_hits"]} == {"하나종합병원", "부산중앙병원"}
-        # 변경 없는 페이지는 캐시로 재추출 생략
-        cached = conn.execute("SELECT COUNT(*) FROM pages WHERE run_id=? AND extracted_by='cache'", (run2,)).fetchone()[0]
-        assert cached >= 1
         md = markdown_report(b)
         assert "이영희" in md and "이직 추정" in md
         assert "고객 명단 변동" in summary_text(b)
-        files = write_reports(conn, run2)
+        files = write_reports(conn, run3)
         assert files["latest_html"].exists() and files["md"].exists()
         site = files["latest_html"].parent
         assert (site / "hospitals.html").exists() and (site / "search.html").exists() and (site / "runs.html").exists()
