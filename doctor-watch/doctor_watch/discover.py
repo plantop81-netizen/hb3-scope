@@ -77,7 +77,7 @@ def candidate_links(base_url: str, html: str, min_score: int = 5) -> list[tuple[
     seen: dict[str, tuple[int, str]] = {}
     for a in soup.find_all("a", href=True):
         href = a["href"].strip()
-        if not href or href.startswith(("#", "javascript", "mailto", "tel")):
+        if not href or href.startswith(("#", "javascript", "mailto", "tel")) or "void(" in href:
             continue
         text = a.get_text(" ", strip=True) or a.get("title", "") or (a.img.get("alt", "") if a.img else "")
         url = _norm(urljoin(base_url, href))
@@ -101,7 +101,7 @@ def department_links(page_url: str, html: str) -> list[str]:
     page_path = urlsplit(page_url).path
     for a in soup.find_all("a", href=True):
         href = a["href"].strip()
-        if not href or href.startswith(("#", "javascript", "mailto", "tel")):
+        if not href or href.startswith(("#", "javascript", "mailto", "tel")) or "void(" in href:
             continue
         url = _norm(urljoin(page_url, href))
         if not same_site(page_url, url) or url in seen:
