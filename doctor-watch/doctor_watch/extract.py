@@ -52,6 +52,7 @@ OUTPUT_SCHEMA = {
 }
 
 _client = None
+_llm_gate = None  # 동시 Claude 호출 수 제한 (요금제 rate limit 보호)
 
 
 def _get_client():
@@ -59,8 +60,40 @@ def _get_client():
     if _client is None:
         import anthropic
 
-        _client = anthropic.Anthropic(max_retries=3)
+        _client = anthropic.Anthropic(max_retries=4)
     return _client
+
+
+def _gate():
+    global _llm_gate
+    if _llm_gate is None:
+        import threading
+
+        _llm_gate = threading.BoundedSemaphore(settings.llm_concurrency)
+    return _llm_gate
+
+
+def _create_with_backoff(**kwargs):
+    """rate limit(429)/과부하(529)는 SDK 재시도 후에도 남으면 길게 쉬고 다시 시도한다."""
+    import time
+
+    import anthropic
+
+    delay = 15.0
+    for attempt in range(6):
+        with _gate():
+            try:
+                return _get_client().messages.create(**kwargs)
+            except anthropic.RateLimitError as e:
+                last = e
+            except anthropic.APIStatusError as e:
+                if e.status_code not in (529, 503):
+                    raise
+                last = e
+        log.warning("Claude 호출 제한/과부하 (%d/6), %.0fs 대기: %s", attempt + 1, delay, last)
+        time.sleep(delay)
+        delay = min(delay * 2, 120)
+    raise last
 
 
 def _chunks(text: str, size: int) -> list[str]:
@@ -82,7 +115,6 @@ def _chunks(text: str, size: int) -> list[str]:
 def extract_with_llm(text: str, hospital_name: str, url: str, model: str | None = None) -> tuple[list[dict[str, Any]], bool]:
     """(doctors, is_staff_page). 실패 시 예외."""
     model = model or settings.model
-    client = _get_client()
     doctors: list[dict[str, Any]] = []
     is_staff = False
     # 한 요청에 너무 긴 텍스트를 넣지 않도록 분할 (약 40k 자 ≈ 25k 토큰)
@@ -102,7 +134,7 @@ def extract_with_llm(text: str, hospital_name: str, url: str, model: str | None 
         if not model.startswith("claude-haiku"):
             # 단순 추출 작업이므로 사고 깊이는 낮게 (Haiku 4.5 는 effort 미지원)
             kwargs["output_config"]["effort"] = "low"
-        resp = client.messages.create(**kwargs)
+        resp = _create_with_backoff(**kwargs)
         if resp.stop_reason == "refusal":
             raise RuntimeError("model refused")
         raw = next(b.text for b in resp.content if b.type == "text")
@@ -196,12 +228,37 @@ def normalize_doctors(rows: list[dict[str, Any]], url: str) -> list[dict[str, An
     return list(out.values())
 
 
+# 크레딧 소진/인증 실패처럼 재시도해도 소용없는 오류가 나면 이번 실행에서는 Claude 호출을 멈춘다.
+LLM_DISABLED_REASON: str | None = None
+
+
+def _fatal_llm_error(e: Exception) -> str | None:
+    try:
+        import anthropic
+    except ImportError:
+        return None
+    msg = str(e)
+    if isinstance(e, anthropic.AuthenticationError):
+        return "API 키 인증 실패"
+    if isinstance(e, anthropic.PermissionDeniedError):
+        return "API 키 권한 없음"
+    if isinstance(e, anthropic.BadRequestError) and "credit balance" in msg.lower():
+        return "Anthropic 크레딧 소진 (콘솔 Plans & Billing 에서 충전 필요)"
+    return None
+
+
 def extract(text: str, hospital_name: str, url: str, prefer_llm: bool = True) -> tuple[list[dict[str, Any]], str]:
     """(doctors, method). method ∈ llm | heuristic."""
-    if prefer_llm and settings.llm_enabled:
+    global LLM_DISABLED_REASON
+    if prefer_llm and settings.llm_enabled and LLM_DISABLED_REASON is None:
         try:
             doctors, _ = extract_with_llm(text, hospital_name, url)
             return doctors, "llm"
         except Exception as e:  # noqa: BLE001
-            log.warning("LLM 추출 실패(%s) → 규칙 기반으로 대체: %s", url, e)
+            fatal = _fatal_llm_error(e)
+            if fatal:
+                LLM_DISABLED_REASON = fatal
+                log.error("Claude 사용 중단: %s", fatal)
+            else:
+                log.warning("LLM 추출 실패(%s) → 규칙 기반으로 대체: %s", url, e)
     return extract_heuristic(text, url), "heuristic"
