@@ -1,18 +1,18 @@
 {
  "run": {
-  "id": 6,
-  "started_at": "2026-09-17T00:47:04+00:00",
-  "finished_at": "2026-09-17T00:49:46+00:00",
+  "id": 7,
+  "started_at": "2026-09-17T01:25:04+00:00",
+  "finished_at": "2026-09-17T01:27:48+00:00",
   "status": "done",
   "week_key": "2026-W38",
-  "stats": "{\"hospitals\": 11, \"ok\": 10, \"failed\": 1, \"doctors\": 886, \"llm_calls\": 0, \"changes\": 0, \"moves\": 0, \"watchlist_hits\": 0}"
+  "stats": "{\"hospitals\": 11, \"ok\": 10, \"failed\": 1, \"doctors\": 886, \"llm_calls\": 1, \"changes\": 0, \"moves\": 0, \"watchlist_hits\": 0}"
  },
  "stats": {
   "hospitals": 11,
   "ok": 10,
   "failed": 1,
   "doctors": 886,
-  "llm_calls": 0,
+  "llm_calls": 1,
   "changes": 0,
   "moves": 0,
   "watchlist_hits": 0
@@ -22,7 +22,7 @@
  "watch_hits": [],
  "failed": [
   {
-   "run_id": 6,
+   "run_id": 7,
    "hospital_id": 11,
    "ok": 0,
    "doctor_count": 0,
