@@ -13,6 +13,10 @@ on:
         description: "종별 (콤마 구분)"
         required: true
         default: "상급종합,종합병원,병원,요양병원,정신병원"
+      deactivate_sido:
+        description: "수집 대상에서 제외할 시도 (콤마 구분, 선택)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -45,6 +49,11 @@ jobs:
           python -m doctor_watch init-hospitals --sido "${{ github.event.inputs.sido }}" --cl "${{ github.event.inputs.cl }}" --with-url-only
       - name: Merge curated hospital CSV
         run: python -m doctor_watch import-hospitals data/hospitals.seed.csv
+      - name: Deactivate excluded regions
+        if: github.event.inputs.deactivate_sido != ''
+        run: |
+          IFS=',' read -ra S <<< "${{ github.event.inputs.deactivate_sido }}"
+          for sd in "${S[@]}"; do python -m doctor_watch deactivate --sido "$sd"; done
       - name: Summary
         run: |
           python -m doctor_watch hospitals | tail -1

@@ -212,10 +212,14 @@ def upsert_hospital(conn: sqlite3.Connection, h: dict[str, Any]) -> int:
     else:
         h["ignore_robots"] = 1 if str(h["ignore_robots"]).strip().lower() in ("1", "true", "y", "yes") else 0
     if row:
-        sets = ", ".join(f"{f}=COALESCE(?, {f})" for f in fields)
+        upd_fields = fields
+        if not h.get("ykiho") and conn.execute("SELECT ykiho FROM hospitals WHERE id=?", (row["id"],)).fetchone()["ykiho"]:
+            # 심평원 정보가 있는 병원: CSV 는 홈페이지/메모/robots 설정만 보정하고 종별·주소 등은 심평원 값을 유지
+            upd_fields = ["url", "notes", "ignore_robots"]
+        sets = ", ".join(f"{f}=COALESCE(?, {f})" for f in upd_fields)
         conn.execute(
             f"UPDATE hospitals SET {sets}, updated_at=? WHERE id=?",
-            [h.get(f) for f in fields] + [ts, row["id"]],
+            [h.get(f) for f in upd_fields] + [ts, row["id"]],
         )
         if h.get("staff_urls"):
             conn.execute(

@@ -97,9 +97,10 @@ python -m doctor_watch serve --host 0.0.0.0 --port 8000
 
 | 명령 | 설명 |
 |---|---|
-| `init-hospitals --sido 부산 --cl 상급종합,종합병원,병원 --with-url-only` | 심평원 API 로 병원 등록/갱신 |
+| `init-hospitals --sido 부산 --cl 상급종합,종합병원,병원 --with-url-only` | 심평원 API 로 병원 등록/갱신 (종별: 상급종합·종합병원·병원·요양병원·정신병원·의원 …) |
 | `import-hospitals file.csv` | CSV 로 병원 등록 (`name,url[,ykiho,sido,cl_name,addr,staff_urls]`, staff_urls 는 `\|` 구분) |
 | `hospitals` | 병원 목록·상태 |
+| `deactivate --sido 대전` / `--hospital-id N` (`--undo`) | 수집 대상 제외/복귀 |
 | `set-staff-urls <id> <url...>` | 자동 탐색이 실패한 병원의 의료진 페이지 수동 지정 |
 | `run [--limit N] [--hospital-id ID] [--no-llm] [--report] [--notify]` | 수집·비교 |
 | `report [--run-id N] [--stdout]` | 보고서(md/html/json) 생성 |
