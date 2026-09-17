@@ -10,3 +10,11 @@ name,url,sido,cl_name,staff_urls,ignore_robots
 온종합병원,https://onhospital.org,부산,,https://onhospital.org/page_fosS33,
 부민병원,https://www.bumin.co.kr,부산,,,
 대동병원,https://www.ddh.co.kr,부산,,,
+경북대학교병원,https://www.knuh.kr,대구,,https://www.knuh.kr/content/01treatment/08_01.asp,
+칠곡경북대학교병원,https://www.knuch.kr,대구,,https://www.knuch.kr/content/02depart/01_01.asp,
+계명대학교동산병원,https://dongsan.dsmc.or.kr:49870/,대구,,https://dongsan.dsmc.or.kr:49870/content/02depart/01_01.php,
+영남대학교병원,https://www.yumc.ac.kr,대구,,https://www.yumc.ac.kr/yumc/PSearch.do,
+대구파티마병원,https://www.fatima.or.kr,대구,,https://www.fatima.or.kr/main/site/doctor/list.do?mp_idx=26|https://www.fatima.or.kr/main/site/part/list.do,
+양산부산대학교병원,https://www.pnuyh.or.kr/pnuyh/index.do,경남,,https://www.pnuyh.or.kr/pnuyh/medical/department.do,1
+학교법인성균관대학삼성창원병원,https://smc.skku.edu/smc/main/main.do?mId=1,경남,,,
+경상국립대학교병원,https://www.gnuh.co.kr,경남,,,

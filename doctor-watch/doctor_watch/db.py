@@ -198,19 +198,26 @@ def upsert_hospital(conn: sqlite3.Connection, h: dict[str, Any]) -> int:
     """ykiho 가 있으면 ykiho 기준, 없으면 (name, url) 기준으로 upsert."""
     ts = now_iso()
     row = None
+    from .names import hospital_key
+
+    def _by_name(require_no_ykiho: bool):
+        cand = conn.execute(
+            "SELECT id, name, ykiho FROM hospitals WHERE (sido IS NULL OR ? IS NULL OR sido=?)" + (" AND ykiho IS NULL" if require_no_ykiho else ""),
+            (h.get("sido"), h.get("sido")),
+        ).fetchall()
+        key = hospital_key(h["name"])
+        exact = [r for r in cand if r["name"] == h["name"]]
+        if exact:
+            return exact[0]
+        same = [r for r in cand if hospital_key(r["name"]) == key]
+        return same[0] if len(same) == 1 else None
+
     if h.get("ykiho"):
         row = conn.execute("SELECT id FROM hospitals WHERE ykiho=?", (h["ykiho"],)).fetchone()
         if row is None:
-            # CSV 로 먼저 등록된(요양기호 없는) 같은 이름의 병원과 병합
-            row = conn.execute(
-                "SELECT id FROM hospitals WHERE ykiho IS NULL AND name=? AND (sido IS NULL OR ? IS NULL OR sido=?)",
-                (h["name"], h.get("sido"), h.get("sido")),
-            ).fetchone()
+            row = _by_name(require_no_ykiho=True)  # CSV 로 먼저 등록된 같은 병원과 병합
     else:
-        row = conn.execute(
-            "SELECT id FROM hospitals WHERE name=? AND (sido IS NULL OR ? IS NULL OR sido=?) ORDER BY (url IS NULL) LIMIT 1",
-            (h["name"], h.get("sido"), h.get("sido")),
-        ).fetchone()
+        row = _by_name(require_no_ykiho=False)
     fields = ["ykiho", "name", "cl_cd", "cl_name", "sido", "sggu", "addr", "tel", "url", "dr_tot_cnt", "notes", "ignore_robots"]
     if h.get("ignore_robots") in ("", None):
         h["ignore_robots"] = None

@@ -103,3 +103,11 @@ def test_retries_on_503(monkeypatch):
     _patch_client(monkeypatch, handler)
     rows = list(hira.iter_hospitals(sido="부산", cl_codes=["상급종합"], service_key="k"))
     assert [r["name"] for r in rows] == ["부산대학교병원"] and calls["n"] == 2
+
+
+def test_hira_row_merges_with_seed_by_normalized_name(tmp_path):
+    with D.session(tmp_path / "t.db") as conn:
+        sid = D.upsert_hospital(conn, {"name": "부민병원", "url": "https://www.bumin.co.kr", "sido": "부산"})
+        hid = D.upsert_hospital(conn, hira.normalize_row(dict(BSM, yadmNm="의료법인 인당의료재단 부민병원", hospUrl="http://www.bumin.co.kr/busan/")))
+        assert sid == hid
+        assert conn.execute("SELECT COUNT(*) FROM hospitals").fetchone()[0] == 1
