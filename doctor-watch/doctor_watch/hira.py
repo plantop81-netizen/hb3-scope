@@ -82,7 +82,7 @@ def _items(payload: dict[str, Any]) -> tuple[list[dict[str, Any]], int]:
 
 # 공공데이터포털은 해외 IP(예: GitHub Actions 미국 러너) 접속을 막는 경우가 있어 연결 시간을 짧게 잡고 몇 번만 재시도한다.
 TIMEOUT = httpx.Timeout(60.0, connect=15.0)
-RETRIES = 3
+RETRIES = 5
 
 
 def _fetch_page(client: httpx.Client, params: dict[str, Any]) -> tuple[list[dict[str, Any]], int]:
@@ -99,6 +99,12 @@ def _fetch_page(client: httpx.Client, params: dict[str, Any]) -> tuple[list[dict
             last = e
             log.warning("HIRA 접속 실패 (%d/%d): %s", attempt + 1, RETRIES, e)
             time.sleep(2 * (attempt + 1))
+        except httpx.HTTPStatusError as e:  # 503 등 일시 장애
+            if e.response.status_code < 500:
+                raise
+            last = e
+            log.warning("HIRA 서버 오류 %s (%d/%d)", e.response.status_code, attempt + 1, RETRIES)
+            time.sleep(5 * (attempt + 1))
     raise HiraError(
         "apis.data.go.kr 에 접속할 수 없습니다. 공공데이터포털은 해외 IP 를 차단하는 경우가 있으니 "
         "국내 PC 에서 `init-hospitals` 를 실행해 목록을 만들거나 CSV 로 등록하세요."

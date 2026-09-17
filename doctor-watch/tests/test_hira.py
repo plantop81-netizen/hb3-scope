@@ -88,3 +88,18 @@ def test_csv_does_not_override_hira_classification(tmp_path):
         D.upsert_hospital(conn, {"name": "부산대학교병원", "url": "https://www.pnuh.or.kr", "sido": "부산", "cl_name": "종합병원"})
         row = conn.execute("SELECT cl_name, url FROM hospitals WHERE name='부산대학교병원'").fetchone()
         assert row["cl_name"] == "상급종합" and row["url"] == "https://www.pnuh.or.kr"
+
+
+def test_retries_on_503(monkeypatch):
+    calls = {"n": 0}
+
+    def handler(req: httpx.Request):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return httpx.Response(503, text="busy")
+        return httpx.Response(200, json=_payload([PNUH], 1))
+
+    monkeypatch.setattr(hira.time, "sleep", lambda s: None)
+    _patch_client(monkeypatch, handler)
+    rows = list(hira.iter_hospitals(sido="부산", cl_codes=["상급종합"], service_key="k"))
+    assert [r["name"] for r in rows] == ["부산대학교병원"] and calls["n"] == 2
