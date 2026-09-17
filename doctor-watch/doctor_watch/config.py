@@ -35,6 +35,8 @@ class Settings:
     anthropic_api_key: str = field(default_factory=lambda: os.environ.get("ANTHROPIC_API_KEY", ""))
     model: str = field(default_factory=lambda: os.environ.get("DOCTOR_WATCH_MODEL", "claude-opus-5"))
     concurrency: int = field(default_factory=lambda: _int("DOCTOR_WATCH_CONCURRENCY", 8))
+    # 동시 Claude 호출 수 (요금제 rate limit 에 맞춰 조정)
+    llm_concurrency: int = field(default_factory=lambda: _int("DOCTOR_WATCH_LLM_CONCURRENCY", 4))
     max_pages_per_hospital: int = field(default_factory=lambda: _int("DOCTOR_WATCH_MAX_PAGES", 200))
     max_chars_per_page: int = field(default_factory=lambda: _int("DOCTOR_WATCH_MAX_CHARS", 120_000))
     # 실행 1회당 Claude 호출 상한 (0 = 무제한). 초과하면 규칙 기반 추출로 대체된다.

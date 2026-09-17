@@ -81,6 +81,8 @@ def summary_text(b: dict[str, Any]) -> str:
     date = run["finished_at"][:10] if run["finished_at"] else run["started_at"][:10]
     lines = [f"🩺 의료진 변동 주간 브리핑 ({date}, {run['week_key']})"]
     lines.append(f"병원 {s.get('hospitals', 0)}곳 중 {s.get('ok', 0)}곳 수집 성공 · 의사 {s.get('doctors', 0)}명 · 변동 {s.get('changes', 0)}건 · 이직 추정 {s.get('moves', 0)}건")
+    if s.get("llm_disabled"):
+        lines.append(f"🚨 Claude 추출 중단: {s['llm_disabled']}")
     if b["watch_hits"]:
         lines.append("")
         lines.append(f"⭐ 고객 명단 변동 {len(b['watch_hits'])}건")
@@ -123,8 +125,12 @@ def markdown_report(b: dict[str, Any]) -> str:
     out.append(f"- 수집 병원: {s.get('hospitals', 0)}곳 (성공 {s.get('ok', 0)}, 실패 {s.get('failed', 0)})")
     out.append(f"- 확인된 의사: {s.get('doctors', 0)}명")
     out.append(f"- 변동: {s.get('changes', 0)}건 · 이직 추정 {s.get('moves', 0)}건 · 고객 명단 해당 {s.get('watchlist_hits', 0)}건")
+    if s.get("llm_disabled"):
+        out.append(f"- 🚨 **Claude 추출 중단: {s['llm_disabled']}** — 이번 주 명단은 규칙 기반 추출이라 정확도가 낮습니다. 해결 후 다음 실행에서 자동으로 다시 추출됩니다.")
     if s.get("llm_budget_exceeded"):
         out.append(f"- ⚠️ Claude 호출 상한({s['llm_budget_exceeded']}회) 초과: 일부 페이지는 규칙 기반으로 추출되어 정확도가 낮을 수 있음")
+    if s.get("heuristic_pages"):
+        out.append(f"- 규칙 기반으로 임시 추출된 페이지 {s['heuristic_pages']}개 (다음 실행에서 Claude 로 재추출)")
     out.append("")
     if b["watch_hits"]:
         out += ["## ⭐ 고객 명단 변동", "", "| 유형 | 병원 | 이름 | 진료과 | 직위 | 이동 병원 | 메모 |", "|---|---|---|---|---|---|---|"]
@@ -184,6 +190,10 @@ def html_report(b: dict[str, Any]) -> str:
     if not run:
         parts.append("<p>완료된 실행이 없습니다.</p>")
         return "\n".join(parts)
+    if s.get("llm_disabled"):
+        parts.append(f"<p style='background:#fde8e8;border:1px solid #f5b5b5;padding:10px;border-radius:6px'>🚨 <b>Claude 추출 중단: {e(s['llm_disabled'])}</b> — 이번 주 명단은 규칙 기반 추출이라 정확도가 낮습니다. 해결 후 다음 실행에서 자동으로 다시 추출됩니다.</p>")
+    elif s.get("heuristic_pages"):
+        parts.append(f"<p class='muted'>규칙 기반으로 임시 추출된 페이지 {s['heuristic_pages']}개 (다음 실행에서 Claude 로 재추출)</p>")
     parts.append(
         "<div class='kpi'>"
         f"<div><b>{s.get('hospitals', 0)}</b>수집 병원 <span class='muted'>(성공 {s.get('ok', 0)})</span></div>"

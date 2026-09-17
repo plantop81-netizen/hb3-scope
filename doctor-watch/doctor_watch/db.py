@@ -124,6 +124,7 @@ CREATE TABLE IF NOT EXISTS doctor_state (
     position     TEXT,
     source_url   TEXT,
     status       TEXT NOT NULL,        -- pending | present | absent
+    dept_pending TEXT,                  -- 진료과 변경 후보 (2회 연속 확인 후 확정)
     hit_count    INTEGER NOT NULL DEFAULT 0,
     miss_count   INTEGER NOT NULL DEFAULT 0,
     first_seen_run INTEGER,
@@ -175,6 +176,10 @@ def _migrate(conn: sqlite3.Connection) -> None:
     cols = {r["name"] for r in conn.execute("PRAGMA table_info(hospitals)")}
     if "ignore_robots" not in cols:
         conn.execute("ALTER TABLE hospitals ADD COLUMN ignore_robots INTEGER NOT NULL DEFAULT 0")
+        conn.commit()
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(doctor_state)")}
+    if cols and "dept_pending" not in cols:
+        conn.execute("ALTER TABLE doctor_state ADD COLUMN dept_pending TEXT")
         conn.commit()
 
 

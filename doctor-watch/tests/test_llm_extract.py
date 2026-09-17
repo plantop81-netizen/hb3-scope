@@ -66,3 +66,25 @@ def test_llm_pick_staff_links(monkeypatch):
     monkeypatch.setattr(extract, "_get_client", lambda: SimpleNamespace(messages=_M()))
     urls = discover.llm_pick_staff_links("테스트병원", "http://h.test/", html)
     assert urls == ["http://h.test/m/team.do"]
+
+
+def test_credit_exhaustion_disables_llm_for_run(monkeypatch):
+    import anthropic
+    import httpx as _hx
+
+    monkeypatch.setattr(extract, "LLM_DISABLED_REASON", None)
+    monkeypatch.setattr(extract.settings, "anthropic_api_key", "dummy")
+    calls = {"n": 0}
+
+    def boom(*a, **k):
+        calls["n"] += 1
+        req = _hx.Request("POST", "https://api.anthropic.com/v1/messages")
+        resp = _hx.Response(400, request=req, json={"type": "error", "error": {"type": "invalid_request_error", "message": "Your credit balance is too low"}})
+        raise anthropic.BadRequestError("Your credit balance is too low", response=resp, body=None)
+
+    monkeypatch.setattr(extract, "extract_with_llm", boom)
+    d1, m1 = extract.extract("정형외과\n박준호 과장", "병원", "http://x")
+    d2, m2 = extract.extract("정형외과\n박준호 과장", "병원", "http://y")
+    assert m1 == m2 == "heuristic" and calls["n"] == 1  # 두 번째부터는 호출 자체를 안 함
+    assert "크레딧" in extract.LLM_DISABLED_REASON
+    monkeypatch.setattr(extract, "LLM_DISABLED_REASON", None)

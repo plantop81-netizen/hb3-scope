@@ -163,7 +163,7 @@ def llm_pick_staff_links(hospital_name: str, base_url: str, html: str, max_links
     """규칙 탐색이 실패한 홈페이지: Claude 에게 링크 목록을 주고 의료진 소개 페이지로 보이는 URL 을 고르게 한다."""
     import json
 
-    from .extract import _get_client
+    from .extract import _create_with_backoff
 
     links = all_links(base_url, html)
     if not links:
@@ -175,7 +175,7 @@ def llm_pick_staff_links(hospital_name: str, base_url: str, html: str, max_links
         "required": ["indices"],
         "additionalProperties": False,
     }
-    resp = _get_client().messages.create(
+    resp = _create_with_backoff(
         model=settings.model,
         max_tokens=512,
         system=(

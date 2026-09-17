@@ -19,15 +19,45 @@ log = logging.getLogger(__name__)
 MIN_STAFF_TEXT = 30  # 이보다 짧은 페이지는 의료진 페이지로 보지 않음
 
 
+def _url_variants(url: str) -> list[str]:
+    from urllib.parse import urlsplit, urlunsplit
+
+    p = urlsplit(url)
+    host = p.netloc
+    hosts = [host[4:] if host.startswith("www.") else "www." + host, host]
+    out = []
+    for scheme in ("https", "http"):
+        for h in hosts:
+            u = urlunsplit((scheme, h, p.path or "/", p.query, ""))
+            if u != url and u not in out:
+                out.append(u)
+    return out[:3]
+
+
+def conn_factory_global():
+    return D.session()
+
+
 async def discover_staff_urls(fetcher: Fetcher, hospital: sqlite3.Row) -> tuple[list[str], str | None]:
     """홈페이지에서 의료진 페이지 후보 URL 을 찾는다. (urls, error)"""
     ir = bool(hospital["ignore_robots"])
     home = await fetcher.get(hospital["url"], ignore_robots=ir)
     if not home.ok:
+        # 심평원 등록 URL 이 오래된 경우가 많다: http↔https, www 유무를 바꿔 한 번씩 더 시도
+        for alt in _url_variants(hospital["url"]):
+            page = await fetcher.get(alt, ignore_robots=ir)
+            if page.ok:
+                home = page
+                with conn_factory_global() as c:
+                    c.execute("UPDATE hospitals SET url=?, updated_at=? WHERE id=?", (page.final_url, D.now_iso(), hospital["id"]))
+                break
+    if not home.ok:
         return [], home.error or f"HTTP {home.status}"
     cands = candidate_links(home.final_url, home.html)
     urls = [u for _, u, _ in cands[:6]]
-    if not urls and settings.llm_enabled:
+    from . import extract as _ex
+
+    if not urls and settings.llm_enabled and _ex.LLM_DISABLED_REASON is None:
         try:
             urls = await asyncio.to_thread(llm_pick_staff_links, hospital["name"], home.final_url, home.html)
         except Exception as e:  # noqa: BLE001
@@ -225,6 +255,15 @@ async def run_collection(
     if budget.exceeded:
         stats["llm_budget_exceeded"] = budget.limit
         log.warning("Claude 호출 예산(%d) 초과: 일부 페이지는 규칙 기반으로 추출됨", budget.limit)
+    from . import extract as _ex
+
+    if _ex.LLM_DISABLED_REASON:
+        stats["llm_disabled"] = _ex.LLM_DISABLED_REASON
+    heuristic_pages = conn.execute(
+        "SELECT COUNT(*) FROM pages WHERE run_id=? AND extracted_by LIKE 'heuristic%'", (run_id,)
+    ).fetchone()[0]
+    if heuristic_pages:
+        stats["heuristic_pages"] = heuristic_pages
 
     # ── 비교 (상태표 기반: 2회 연속 확인 시 합류, 2회 연속 부재 시 제외) ──
     for h in hospitals:

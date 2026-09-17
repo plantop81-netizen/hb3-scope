@@ -236,12 +236,19 @@ def apply_snapshot(
         prev_d = {x.strip() for x in (st["department"] or "").split("/") if x.strip()}
         cur_d = {x.strip() for x in (dept or "").split("/") if x.strip()}
         if prev_d and cur_d and not (prev_d & cur_d):
-            changes.append({"kind": "dept_changed", "name": rep["name"], "name_key": key, "department": dept, "position": pos,
-                            "prev_department": st["department"], "prev_position": st["position"]})
-        elif st["position"] and pos and st["position"] != pos and len({r.get("position") for r in rows if r.get("position")}) == 1:
+            # 진료과가 통째로 바뀐 것처럼 보이면 다음 실행에서도 같으면 확정 (수집 페이지 편차로 인한 잡음 방지)
+            if st.get("dept_pending") and {x.strip() for x in st["dept_pending"].split("/")} & cur_d:
+                changes.append({"kind": "dept_changed", "name": rep["name"], "name_key": key, "department": dept, "position": pos,
+                                "prev_department": st["department"], "prev_position": st["position"]})
+                upsert(key, name=rep["name"], department=dept, position=pos, dept_pending=None, source_url=rep.get("source_url"),
+                       miss_count=0, last_seen_run=run_id, updated_run=run_id)
+            else:
+                upsert(key, dept_pending=dept, position=pos, source_url=rep.get("source_url"), miss_count=0, last_seen_run=run_id, updated_run=run_id)
+            continue
+        if st["position"] and pos and st["position"] != pos and len({r.get("position") for r in rows if r.get("position")}) == 1:
             changes.append({"kind": "position_changed", "name": rep["name"], "name_key": key, "department": dept, "position": pos,
                             "prev_department": st["department"], "prev_position": st["position"]})
-        upsert(key, name=rep["name"], department=dept, position=pos, source_url=rep.get("source_url"), miss_count=0, last_seen_run=run_id, updated_run=run_id)
+        upsert(key, name=rep["name"], department=dept, position=pos, dept_pending=None, source_url=rep.get("source_url"), miss_count=0, last_seen_run=run_id, updated_run=run_id)
 
     # 이번에 안 보인 사람들
     for key, st in states.items():
