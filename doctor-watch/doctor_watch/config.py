@@ -37,6 +37,8 @@ class Settings:
     concurrency: int = field(default_factory=lambda: _int("DOCTOR_WATCH_CONCURRENCY", 8))
     max_pages_per_hospital: int = field(default_factory=lambda: _int("DOCTOR_WATCH_MAX_PAGES", 200))
     max_chars_per_page: int = field(default_factory=lambda: _int("DOCTOR_WATCH_MAX_CHARS", 120_000))
+    # 실행 1회당 Claude 호출 상한 (0 = 무제한). 초과하면 규칙 기반 추출로 대체된다.
+    max_llm_calls_per_run: int = field(default_factory=lambda: _int("DOCTOR_WATCH_MAX_LLM_CALLS", 1500))
     request_timeout: float = 25.0
     per_host_delay: float = 0.6
     render_mode: str = field(default_factory=lambda: os.environ.get("DOCTOR_WATCH_RENDER", "auto"))
